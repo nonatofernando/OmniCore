@@ -17,6 +17,12 @@ class DashboardController extends Controller
             return redirect('/login');
         }
 
+        return view('dashboard');
+    }
+
+    public function get_vendas_semanais()
+    {
+
         $hoje = Carbon::today();
 
         $total_pedidos = Pedido::whereDate('created_at', $hoje)->count();
@@ -27,24 +33,25 @@ class DashboardController extends Controller
         $pedidos = Pedido::orderBy('created_at', 'desc')->take(5)->get();
         $produtos = Produto::orderBy('vendidos', 'desc')->take(4)->get();
 
-        // 6. Métricas de Performance
-        $performance_metrics = [
-            ['label' => 'Meta Mensal', 'displayValue' => 'R$ ' . number_format($receita, 0, ',', '.'), 'percentage' => 75]
+
+        $meta_vendas_mensal = 11200;
+        $porcentagem_meta = ($meta_vendas_mensal > 0) ? round(($receita / $meta_vendas_mensal) * 100) : 0;
+        $porcentagem_barra_vendas = $porcentagem_meta > 100 ? 100 : $porcentagem_meta;
+
+        $taxa_entrega = ($total_pedidos > 0) ? round(($entregues / $total_pedidos) * 100) : 0;
+
+        $performance = [
+            'vendas' => [
+                'receita_atual' => $receita,
+                'meta_valor' => $meta_vendas_mensal,
+                'porcentagem' => $porcentagem_meta,
+                'porcentagem_barra' => $porcentagem_barra_vendas
+            ],
+            'entregas' => [
+                'taxa_sucesso' => $taxa_entrega
+            ]
         ];
 
-        return view('dashboard', compact(
-            'total_pedidos',
-            'pendentes',
-            'entregues',
-            'receita',
-            'pedidos',
-            'produtos',
-            'performance_metrics'
-        ));
-    }
-
-    public function get_vendas_semanais()
-    {
         $vendas = Pedido::select(
             DB::raw('DATE(created_at) as data'),
             DB::raw('SUM(total) as total')
@@ -63,6 +70,14 @@ class DashboardController extends Controller
         }
 
         return response()->json([
+            'status' => 'success',
+            'total_pedidos' => $total_pedidos,
+            'pendentes' => $pendentes,
+            'entregues' => $entregues,
+            'receita' => $receita,
+            'pedidos' => $pedidos,
+            'produtos' => $produtos,
+            'performance' => $performance,
             'labels' => $labels,
             'series' => $valores
         ]);

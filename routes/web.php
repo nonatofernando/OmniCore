@@ -11,11 +11,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/login', [AuthController::class, 'form'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware('auth.session')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/api/vendas-semanais', [DashboardController::class, 'get_vendas_semanais']);
+    Route::get('/vendas-semanais', [DashboardController::class, 'get_vendas_semanais']);
 
     Route::prefix('pedidos')->group(function () {
         Route::get('/', [PedidosController::class, 'index'])->name('pedidos');
