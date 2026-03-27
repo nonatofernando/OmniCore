@@ -9,7 +9,7 @@ class CategoriaSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Categorias Padrão (Sistema - visíveis para todos)
+
         $categorias_padrao = [
             ['nome' => 'Alimentos', 'cor' => '#ef4444', 'descricao' => 'Produtos alimentícios em geral'],
             ['nome' => 'Bebidas', 'cor' => '#3b82f6', 'descricao' => 'Sucos, águas, refrigerantes e alcoólicos'],
@@ -35,9 +35,9 @@ class CategoriaSeeder extends Seeder
             );
         }
 
-        // 2. Exemplo de Categorias Personalizadas (apenas se houver usuários)
+
         $usuario = DB::table('usuarios')->first();
-        
+
         if ($usuario) {
             $categorias_usuario = [
                 ['nome' => 'Minha Coleção VIP', 'cor' => '#000000', 'descricao' => 'Itens exclusivos do usuário'],
