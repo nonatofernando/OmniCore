@@ -19,7 +19,7 @@ Route::middleware('auth.session')->group(function () {
 
     Route::prefix('pedidos')->group(function () {
         Route::get('/', [PedidosController::class, 'index'])->name('pedidos');
-        Route::get('/{id}', [PedidosController::class, 'detalhes'])->name('pedido.detalhes');
+        Route::get('/get-pedidos', [PedidosController::class, 'getPedidos'])->name('pedidos.get');
     });
 
     Route::prefix('produtos')->group(function () {

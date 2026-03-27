@@ -1,0 +1,21 @@
+:root {
+    --bg-dark: #020617;
+    --card-dark: #0b1120;
+}
+
+body {
+    background-color: var(--bg-dark);
+}
+
+.bg-card {
+    background-color: var(--card-dark);
+}
+
+.btn-glow {
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+}
+
+/* Estilo para focar nos inputs */
+input:focus {
+    box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.1);
+}

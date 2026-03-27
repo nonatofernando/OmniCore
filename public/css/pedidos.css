@@ -1,0 +1,35 @@
+/* public/css/pedidos.css */
+
+:root {
+    --bg-main: #020617;
+    --bg-card: #0b1224;
+}
+
+body {
+    background-color: var(--bg-main);
+    font-family: "Inter", system-ui, sans-serif;
+}
+
+.bg-card {
+    background-color: var(--bg-card);
+}
+
+/* Scrollbar personalizada para a tabela em telas pequenas */
+.overflow-x-auto::-webkit-scrollbar {
+    height: 4px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 10px;
+}
+
+/* Efeito de brilho no ID do pedido ao passar o mouse na linha */
+tr:hover .font-mono {
+    color: #00e5ff !important;
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+}

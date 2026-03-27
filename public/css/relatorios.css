@@ -1,0 +1,17 @@
+:root {
+    --bg-dark: #020617;
+    --card-dark: #0b1120;
+}
+
+body {
+    background-color: var(--bg-dark);
+}
+
+.bg-card {
+    background-color: var(--card-dark);
+}
+
+/* Esconder as linhas de grade do gráfico para um look mais clean */
+canvas {
+    max-width: 100% !important;
+}
