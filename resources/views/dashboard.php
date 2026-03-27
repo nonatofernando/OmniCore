@@ -23,6 +23,7 @@
             <div class="bg-card p-6 rounded-xl relative overflow-hidden">
                 <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Pedidos Hoje</p>
                 <h2 id="total_pedidos_hoje" class="text-3xl font-bold mt-1"></h2>
+                <h2 class=" loader font-bold mt-1">-</h2>
                 <p id="variacao_pedidos_hoje" class="text-green-400 text-xs mt-2 font-medium"><span class="text-gray-500 font-normal">vs ontem</span></p>
                 <div class="absolute top-4 right-4 bg-cyan-950/50 p-2 rounded-lg text-cyan-400 text-xl">🛒</div>
             </div>
@@ -30,6 +31,7 @@
             <div class="bg-card p-6 rounded-xl relative overflow-hidden">
                 <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Pendentes</p>
                 <h2 id="total_pendentes" class="text-3xl font-bold mt-1"></h2>
+                <h2 class=" loader font-bold mt-1">-</h2>
                 <p id="variacao_pendentes" class="text-red-400 text-xs mt-2 font-medium"> <span class="text-gray-500 font-normal">vs ontem</span></p>
                 <div class="absolute top-4 right-4 bg-orange-950/30 p-2 rounded-lg text-orange-400 text-xl">🚚</div>
             </div>
@@ -37,6 +39,7 @@
             <div class="bg-card p-6 rounded-xl relative overflow-hidden">
                 <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Entregues</p>
                 <h2 id="total_entregues" class="text-3xl font-bold mt-1"></h2>
+                <h2 class=" loader font-bold mt-1">-</h2>
                 <p id="variacao_entregues" class="text-green-400 text-xs mt-2 font-medium"><span class="text-gray-500 font-normal">vs ontem</span></p>
                 <div class="absolute top-4 right-4 bg-green-950/30 p-2 rounded-lg text-green-400 text-xl">✅</div>
             </div>
@@ -56,8 +59,8 @@
                     <span class="text-[10px] bg-cyan-900/30 text-cyan-400 px-2 py-1 rounded border border-cyan-800">Esta Semana</span>
                 </div>
                 <div id="chart-container" class="relative w-full" style="height: 300px;">
-                    <div id="loader" class="absolute inset-0 flex items-center justify-center bg-card z-10">
-                        
+                    <div class="loader absolute inset-0 flex items-center justify-center bg-card z-10">
+                        Carregando gráfico...
                     </div>
                     <div id="salesChart" class="w-full h-full"></div>
                 </div>
@@ -68,8 +71,11 @@
                     <h3 class="font-bold">Pedidos Recentes</h3>
                     <a href="/pedidos" class="text-cyan-400 text-xs hover:underline">Ver Todos</a>
                 </div>
-                <div class="space-y-5">
-                    
+                <div class="loader flex items-center justify-center">
+                    Carregando pedidos...
+                </div>
+                <div id="pedidos_recentes" class="space-y-5"></div>
+
                 </div>
             </div>
         </div>
@@ -77,15 +83,21 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-8">
             <div class="bg-card p-6 rounded-xl">
                 <h3 class="font-bold mb-6">Top Produtos</h3>
+                <div class="loader flex items-center justify-center">
+                    Carregando produtos...
+                </div>
                 <div id="top_produtos_vendidos" class="space-y-4">
-                    
+
                 </div>
             </div>
 
             <div class="bg-card p-6 rounded-xl">
                 <h3 class="font-bold mb-6">Métricas de Performance</h3>
+                <div class="loader flex items-center justify-center">
+                    Carregando métricas...
+                </div>
                 <div id="metricas_performance" class="space-y-6">
-                    
+
                 </div>
             </div>
         </div>
