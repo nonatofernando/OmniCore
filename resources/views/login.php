@@ -16,48 +16,46 @@ $erro = $_GET['erro'] ?? '';
 </head>
 
 <body>
-    <div class="container login-container d-flex justify-content-center align-items-center">
-        <div class="login-card text-center">
+    <main>
+        <div class="login-card bg-card text-center">
 
             <div class="logo">
-                <img src="/imgs/logo.png" alt="OmniCore">
+                <img src="/imgs/logo.png" alt="OmniCore" style="width: 100px; margin-bottom: 15px;">
             </div>
 
-            <h1>Bem-vindo!</h1>
-            <p>Faça login para continuar</p>
+            <h1 class="fw-bold font-bold text-white">Bem-vindo!</h1>
+            <p class="text-secondary">Faça login para continuar</p>
 
-            <?php if ($erro === 'usuario'): ?>
-                <div class="erro">Usuário não encontrado!</div>
-            <?php elseif ($erro === 'senha'): ?>
-                <div class="erro">Senha incorreta!</div>
-            <?php elseif ($erro === 'campos'): ?>
-                <div class="erro">Preencha todos os campos!</div>
+            <?php if ($erro): ?>
+                <div class="erro">
+                    <?= $erro === 'usuario' ? 'Usuário não encontrado!' : ($erro === 'senha' ? 'Senha incorreta!' : 'Preencha todos os campos!') ?>
+                </div>
             <?php endif; ?>
 
             <form method="POST" action="/login">
                 <?= csrf_field() ?>
 
                 <div class="input-group-custom">
-                    <label>Email</label>
+                    <label class="accent-cyan">Email</label>
                     <input type="email" name="email" class="form-control" required>
                 </div>
 
                 <div class="input-group-custom">
-                    <label>Senha</label>
+                    <label class="accent-cyan">Senha</label>
                     <input type="password" name="senha" class="form-control" required>
                 </div>
 
-                <button type="submit" class="btn btn-dark w-100">Entrar</button>
+                <button type="submit" class="btn-cyan-glow w-100">Entrar</button>
             </form>
 
-            <div class="links">
+            <div class="links mt-3">
                 <a href="#">Esqueceu a senha?</a>
-                <span>|</span>
-                <a href="#">Criar conta</a>
+                <span class="mx-2" style="color: #1e293b">|</span>
+                <a href="#" class="accent-cyan">Criar conta</a>
             </div>
 
         </div>
-    </div>
+    </main>
 </body>
 
 </html>
