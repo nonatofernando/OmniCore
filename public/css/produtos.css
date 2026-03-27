@@ -1,0 +1,32 @@
+:root {
+    --bg-dark: #020617;
+    --card-dark: #0b1120;
+    --accent-cyan: #00e5ff;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: white;
+    font-family: "Inter", sans-serif;
+}
+
+.bg-card {
+    background-color: var(--card-dark);
+}
+
+.btn-glow {
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+}
+
+.btn-glow:hover {
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+    transform: translateY(-1px);
+}
+
+input#inputBusca::placeholder {
+    color: #475569;
+}
+
+.product-card {
+    transition: all 0.3s ease;
+}
