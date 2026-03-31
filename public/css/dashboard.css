@@ -1,4 +1,4 @@
-/* Importante: Removendo o scroll do body para travar o layout */
+
 body {
     background-color: #030712;
     color: #f9fafb;
@@ -8,7 +8,6 @@ body {
     overflow: hidden; 
 }
 
-/* Área de conteúdo rolável */
 main {
     height: 100vh;
     overflow-y: auto;
@@ -36,4 +35,57 @@ main {
     height: 100%;
     background: #22d3ee;
     border-radius: 4px;
+}
+
+.menu-toggle {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: #020617;
+    color: #22d3ee;
+    border: none;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 20px;
+    z-index: 1001;
+    display: none;
+    cursor: pointer;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(2, 6, 23, 0.7);
+    z-index: 1000;
+    display: none;
+}
+
+.sidebar {
+    transition: transform 0.3s ease;
+}
+
+@media (max-width: 768px) {
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        transform: translateX(-100%);
+        z-index: 1002;
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .overlay.active {
+        display: block;
+    }
 }

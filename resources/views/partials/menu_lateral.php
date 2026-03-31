@@ -1,11 +1,13 @@
-<!-- CDN -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 <link rel="stylesheet" href="/css/menu_lateral.css">
 
+<button class="menu-toggle" id="menu_toggle">
+    <i class="bi bi-list"></i>
+</button>
+
+<div class="overlay" id="overlay"></div>
 
 <aside class="sidebar">
-
-    <!-- LOGO -->
     <div>
         <div class="sidebar-header">
             <img src="/imgs/logo.png" alt="OmniCore">
@@ -13,7 +15,6 @@
             <h1>OmniCore</h1>
         </div>
 
-        <!-- MENU -->
         <nav class="sidebar-nav">
 
             <a href="/" class="active">
@@ -42,8 +43,6 @@
 
         </nav>
     </div>
-
-    <!-- FOOTER -->
     <div class="sidebar-footer">
         <div class="status">
             <div class="status-dot"></div>
