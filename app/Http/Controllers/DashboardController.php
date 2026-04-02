@@ -20,48 +20,62 @@ class DashboardController extends Controller
         return view('dashboard');
     }
 
-    public function get_vendas_semanais()
+    public function get_vendas_semanais(Request $request)
     {
+
+        $id_usuario = $request->id_usuario;
+        if (!$id_usuario) {
+            return response()->json(['status' => 'error', 'message' => 'ID do usuário é obrigatório.'], 400);
+        }
         $hoje = Carbon::today();
         $ontem = Carbon::yesterday();
 
-        $total_pedidos = Pedido::whereDate('created_at', $hoje)->count();
+        $total_pedidos = Pedido::where('usuario_id', $id_usuario)->whereDate('created_at', $hoje)->count();
 
-        $pendentes = Pedido::whereDate('created_at', $hoje)
+        $pendentes = Pedido::where('usuario_id', $id_usuario)
+            ->whereDate('created_at', $hoje)
             ->where('status', 'pendente')
             ->count();
 
-        $entregues = Pedido::whereDate('created_at', $hoje)
+        $entregues = Pedido::where('usuario_id', $id_usuario)
+            ->whereDate('created_at', $hoje)
             ->where('status', 'entregue')
             ->count();
 
-        $receita = Pedido::whereDate('created_at', $hoje)
+        $receita = Pedido::where('usuario_id', $id_usuario)
+            ->whereDate('created_at', $hoje)
             ->where('status', 'entregue')
             ->sum('total');
 
-        $pedidos_ontem = Pedido::whereDate('created_at', $ontem)->count();
+        $pedidos_ontem = Pedido::where('usuario_id', $id_usuario)->whereDate('created_at', $ontem)->count();
 
-        $pendentes_ontem = Pedido::whereDate('created_at', $ontem)
+        $pendentes_ontem = Pedido::where('usuario_id', $id_usuario)
+            ->whereDate('created_at', $ontem)
             ->where('status', 'pendente')
             ->count();
 
-        $entregues_ontem = Pedido::whereDate('created_at', $ontem)
+        $entregues_ontem = Pedido::where('usuario_id', $id_usuario)
+            ->whereDate('created_at', $ontem)
             ->where('status', 'entregue')
             ->count();
 
-        $receita_ontem = Pedido::whereDate('created_at', $ontem)
+        $receita_ontem = Pedido::where('usuario_id', $id_usuario)
+            ->whereDate('created_at', $ontem)
             ->where('status', 'entregue')
             ->sum('total');
 
-        $pedidos = Pedido::orderBy('created_at', 'desc')
+        $pedidos = Pedido::where('usuario_id', $id_usuario)
+            ->orderBy('created_at', 'desc')
             ->take(5)
             ->get();
 
-        $produtos = Produto::orderBy('vendidos', 'desc')
+        $produtos = Produto::where('usuario_id', $id_usuario)
+            ->orderBy('vendidos', 'desc')
             ->take(4)
             ->get();
 
-        $cancelados = Pedido::whereDate('created_at', $hoje)
+        $cancelados = Pedido::where('usuario_id', $id_usuario)
+            ->whereDate('created_at', $hoje)
             ->where('status', 'cancelado')
             ->count();
 
@@ -75,9 +89,7 @@ class DashboardController extends Controller
             ? round(($receita / $meta_vendas_mensal) * 100)
             : 0;
 
-        $porcentagem_barra_vendas = $porcentagem_meta > 100
-            ? 100
-            : $porcentagem_meta;
+        $porcentagem_barra_vendas = $porcentagem_meta > 100 ? 100 : $porcentagem_meta;
 
         $taxa_entrega = ($total_pedidos > 0)
             ? round(($entregues / $total_pedidos) * 100)
@@ -90,17 +102,14 @@ class DashboardController extends Controller
                 'porcentagem' => $porcentagem_meta,
                 'porcentagem_barra' => $porcentagem_barra_vendas,
                 'crescimento' => $crescimento_receita
-            ],
-            'entregas' => [
-                'taxa_sucesso' => $taxa_entrega,
-                'total_entregues' => $entregues
             ]
         ];
 
-        $vendas = Pedido::select(
-            DB::raw('DATE(created_at) as data'),
-            DB::raw('SUM(total) as total')
-        )
+        $vendas = Pedido::where('usuario_id', $id_usuario)
+            ->select(
+                DB::raw('DATE(created_at) as data'),
+                DB::raw('SUM(total) as total')
+            )
             ->where('created_at', '>=', now()->subDays(6))
             ->groupBy('data')
             ->orderBy('data', 'asc')

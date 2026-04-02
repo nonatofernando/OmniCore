@@ -18,4 +18,17 @@ class PedidosController extends Controller
         return view('pedidos');
     }
 
+    public function getPedidos(Request $request)
+    {
+        $id_usuario = $request->id_usuario;
+
+        $pedidos = Pedido::where('usuario_id', $id_usuario)
+            ->with('produtos') 
+            ->get();
+
+        return response()->json([
+            'resposta' => 'sucesso', 
+            'pedidos' => $pedidos
+        ]);
+    }
 }

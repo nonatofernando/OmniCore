@@ -9,6 +9,9 @@ $(document).ready(function () {
 function carregarPedidos() {
     $.ajax({
         type: "GET",
+        data: {
+            id_usuario: $("#id_usuario_menu").val(),
+        },
         url: "/pedidos/get-pedidos",
         dataType: "json",
         success: (res) => {

@@ -57,6 +57,9 @@ function render_variacao(valor) {
 function get_vendas_semanais() {
     $.ajax({
         type: "GET",
+        data: {
+            id_usuario: $("#id_usuario_menu").val(),
+        },
         dataType: "json",
         url: "/vendas-semanais",
 

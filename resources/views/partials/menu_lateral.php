@@ -6,6 +6,7 @@
 </button>
 
 <div class="overlay" id="overlay"></div>
+<input  type="hidden" id="id_usuario_menu" value="<?php echo session('id'); ?>"></input>
 
 <aside class="sidebar">
     <div>
