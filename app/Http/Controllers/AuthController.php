@@ -37,6 +37,7 @@ class AuthController extends Controller
 
         Session::put('id', $user->id);
         Session::put('nome', $user->nome);
+        Session::save();
 
         return redirect('/');
     }
