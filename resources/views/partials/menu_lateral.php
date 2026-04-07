@@ -6,44 +6,25 @@
 </button>
 
 <div class="overlay" id="overlay"></div>
-<input  type="hidden" id="id_usuario_menu" value="<?php echo session('id'); ?>"></input>
+<input type="hidden" id="id_usuario_menu" value="<?php echo session('id'); ?>">
 
 <aside class="sidebar">
     <div>
         <div class="sidebar-header">
             <img src="/imgs/logo.png" alt="OmniCore">
-
             <h1>OmniCore</h1>
         </div>
 
         <nav class="sidebar-nav">
-
-            <a href="/" class="active">
-                <i class="bi bi-grid"></i> Dashboard
-            </a>
-
-            <a href="/pedidos" class="">
-                <i class="bi bi-cart"></i> Pedidos
-            </a>
-
-            <a href="/produtos" class="">
-                <i class="bi bi-box"></i> Produtos
-            </a>
-
-            <a href="/clientes" class="">
-                <i class="bi bi-people"></i> Clientes
-            </a>
-
-            <a href="/relatorios" class="">
-                <i class="bi bi-bar-chart"></i> Relatórios
-            </a>
-
-            <a href="/configuracoes" class="">
-                <i class="bi bi-gear"></i> Configurações
-            </a>
-
+            <a href="/" class="active"><i class="bi bi-grid"></i> Dashboard</a>
+            <a href="/pedidos"><i class="bi bi-cart"></i> Pedidos</a>
+            <a href="/produtos"><i class="bi bi-box"></i> Produtos</a>
+            <a href="/clientes"><i class="bi bi-people"></i> Clientes</a>
+            <a href="/relatorios"><i class="bi bi-bar-chart"></i> Relatórios</a>
+            <a href="/configuracoes"><i class="bi bi-gear"></i> Configurações</a>
         </nav>
     </div>
+
     <div class="sidebar-footer">
         <div class="status">
             <div class="status-dot"></div>

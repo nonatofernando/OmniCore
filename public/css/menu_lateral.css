@@ -4,6 +4,9 @@ body {
     padding: 0;
 }
 
+/* ==========================
+   Sidebar principal
+========================== */
 .sidebar {
     width: 260px;
     height: 100vh;
@@ -15,6 +18,7 @@ body {
     box-sizing: border-box;
     padding: 20px;
     border-right: 1px solid rgba(255, 255, 255, 0.05);
+    transition: 0.3s;
 }
 
 .sidebar-header {
@@ -26,9 +30,7 @@ body {
 
 .sidebar-header img {
     width: 40px;
-
     height: 40px;
-
     object-fit: contain;
 }
 
@@ -85,4 +87,59 @@ body {
     height: 8px;
     background: #22c55e;
     border-radius: 50%;
+}
+
+/* ==========================
+   Botão menu responsivo
+========================== */
+#menu_toggle {
+    display: none; /* escondido por padrão */
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 999;
+    background: #22d3ee;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    color: #fff;
+}
+
+/* ==========================
+   Overlay
+========================== */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 997;
+}
+
+/* ==========================
+   Responsividade para mobile
+========================== */
+@media (max-width: 768px) {
+    #menu_toggle {
+        display: inline-block;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: -260px;
+        top: 0;
+        z-index: 998;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    .overlay.active {
+        display: block;
+    }
 }
