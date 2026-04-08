@@ -20,11 +20,11 @@ class PedidosController extends Controller
         return view('pedidos');
     }
 
-
     public function getPedidos(Request $request)
     {
+        $usuario_id = $request->id_usuario ?? Session::get('id');
 
-        $query = Pedido::with('cliente')->where('usuario_id', $request->id_usuario);
+        $query = Pedido::with('cliente')->where('usuario_id', $usuario_id);
 
         if (!empty($request->status)) {
             $query->where('status', $request->status);
@@ -48,31 +48,28 @@ class PedidosController extends Controller
         ]);
     }
 
-
     public function getDadosIniciais()
     {
         return response()->json([
             'clientes' => Cliente::all(['id', 'nome']),
-            'produtos' => Produto::all(['id', 'nome', 'preco'])
+            'produtos' => Produto::all(['id', 'nome', 'preco', 'estoque'])
         ]);
     }
 
     public function salvar(Request $request)
     {
         try {
-            if (!$request->id_cliente) {
-                return response()->json([
-                    'status' => 'erro',
-                    'mensagem' => 'Cliente é obrigatório'
-                ], 400);
+            DB::beginTransaction();
+
+            if (empty($request->id_cliente)) {
+                return response()->json(['status' => 'erro', 'mensagem' => 'Cliente é obrigatório.'], 400);
             }
 
-            if (!$request->lista_produtos || count($request->lista_produtos) === 0) {
-                return response()->json([
-                    'status' => 'erro',
-                    'mensagem' => 'Adicione produtos ao pedido'
-                ], 400);
+            if (empty($request->lista_produtos) || !is_array($request->lista_produtos)) {
+                return response()->json(['status' => 'erro', 'mensagem' => 'Adicione pelo menos um produto ao pedido.'], 400);
             }
+
+            $usuario_id = $request->id_usuario ?? Session::get('id');
 
             $ultimoPedido = Pedido::orderBy('id', 'desc')->first();
             $numero_pedido = $ultimoPedido ? $ultimoPedido->numero_pedido + 1 : 1;
@@ -80,36 +77,169 @@ class PedidosController extends Controller
             $pedido = new Pedido();
             $pedido->numero_pedido = $numero_pedido;
             $pedido->cliente_id = $request->id_cliente;
-            $pedido->usuario_id = $request->id_usuario;
-            $pedido->total = $request->valor_total;
+            $pedido->usuario_id = $usuario_id;
+            $pedido->total = $request->valor_total ?? 0;
             $pedido->status = 'pendente';
-            $pedido->metodo_pagamento = $request->metodo_pagamento;
-            $pedido->observacoes = $request->obs_pedido;
+            $pedido->metodo_pagamento = $request->metodo_pagamento ?? 'pix';
+            $pedido->observacoes = $request->obs_pedido ?? null;
             $pedido->save();
 
             foreach ($request->lista_produtos as $item) {
-                PedidoProduto::create([
-                    'pedido_id' => $pedido->id,
-                    'produto_id' => $item['id_produto'],
-                    'quantidade' => $item['qtd_produto'],
-                ]);
+                if (!empty($item['id_produto']) && !empty($item['qtd_produto'])) {
+                    PedidoProduto::create([
+                        'pedido_id' => $pedido->id,
+                        'produto_id' => $item['id_produto'],
+                        'quantidade' => $item['qtd_produto'],
+                    ]);
+
+                    $produto = Produto::find($item['id_produto']);
+                    if ($produto) {
+                        $produto->estoque = max(0, $produto->estoque - $item['qtd_produto']);
+                        $produto->save();
+                    }
+                }
             }
+
+            DB::commit();
 
             return response()->json([
                 'status' => 'sucesso',
                 'mensagem' => 'Pedido #' . str_pad($numero_pedido, 6, '0', STR_PAD_LEFT) . ' criado com sucesso!'
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'erro',
-                'mensagem' => $e->getMessage()
-            ], 500);
+            DB::rollBack();
+            return response()->json(['status' => 'erro', 'mensagem' => 'Erro interno: ' . $e->getMessage()], 500);
         }
     }
 
-    public function detalhes($id)
+    public function detalhes(Request $request, $id)
     {
-        $pedido = Pedido::with(['produtos', 'cliente'])->findOrFail($id);
-        return view('pedidos.detalhes', compact('pedido'));
+        try {
+            $usuario_id = $request->id_usuario ?? Session::get('id');
+
+            $pedido = Pedido::with(['produtos', 'cliente'])
+                ->where('usuario_id', $usuario_id)
+                ->findOrFail($id);
+
+            $pedido_simplificado = [
+                'id' => $pedido->id,
+                'numero_pedido' => $pedido->numero_pedido,
+                'total' => $pedido->total,
+                'status' => $pedido->status,
+                'metodo_pagamento' => $pedido->metodo_pagamento,
+                'observacoes' => $pedido->observacoes,
+                'produtos' => $pedido->produtos->map(function ($p) {
+                    return [
+                        'id' => $p->id,
+                        'nome' => $p->nome,
+                        'preco' => $p->preco,
+                        'quantidade' => $p->pivot->quantidade,
+                    ];
+                }),
+                'cliente' => $pedido->cliente ? [
+                    'id' => $pedido->cliente->id,
+                    'nome' => $pedido->cliente->nome,
+                ] : null,
+            ];
+
+            return response()->json(['pedido' => $pedido_simplificado]);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'erro', 'mensagem' => 'Pedido não encontrado.'], 404);
+        }
+    }
+
+    public function atualizar(Request $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+
+            if (empty($request->id_cliente)) {
+                return response()->json(['status' => 'erro', 'mensagem' => 'O cliente não pode ficar em branco.'], 400);
+            }
+
+            if (empty($request->lista_produtos) || !is_array($request->lista_produtos)) {
+                return response()->json(['status' => 'erro', 'mensagem' => 'O pedido precisa ter pelo menos um produto.'], 400);
+            }
+
+            $usuario_id = $request->id_usuario ?? Session::get('id');
+            $pedido = Pedido::where('usuario_id', $usuario_id)->findOrFail($id);
+
+            $produtos_antigos = PedidoProduto::where('pedido_id', $pedido->id)->get();
+            foreach ($produtos_antigos as $p) {
+                $produto = Produto::find($p->produto_id);
+                if ($produto) {
+                    $produto->estoque += $p->quantidade;
+                    $produto->save();
+                }
+            }
+
+            $pedido->update([
+                'cliente_id' => $request->id_cliente,
+                'status' => $request->status ?? $pedido->status,
+                'metodo_pagamento' => $request->metodo_pagamento ?? $pedido->metodo_pagamento,
+                'total' => $request->valor_total ?? $pedido->total,
+                'observacoes' => $request->observacoes,
+            ]);
+
+            PedidoProduto::where('pedido_id', $pedido->id)->delete();
+
+            foreach ($request->lista_produtos as $item) {
+                if (!empty($item['id_produto']) && !empty($item['qtd_produto'])) {
+                    PedidoProduto::create([
+                        'pedido_id' => $pedido->id,
+                        'produto_id' => $item['id_produto'],
+                        'quantidade' => $item['qtd_produto'],
+                    ]);
+
+                    $produto = Produto::find($item['id_produto']);
+                    if ($produto) {
+                        $produto->estoque = max(0, $produto->estoque - $item['qtd_produto']);
+                        $produto->save();
+                    }
+                }
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'sucesso',
+                'mensagem' => 'Pedido #' . $pedido->numero_pedido . ' atualizado!'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'erro', 'mensagem' => 'Erro ao atualizar: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function excluir(Request $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $usuario_id = $request->id_usuario ?? Session::get('id');
+            $pedido = Pedido::where('usuario_id', $usuario_id)->findOrFail($id);
+
+            $produtos = PedidoProduto::where('pedido_id', $pedido->id)->get();
+            foreach ($produtos as $p) {
+                $produto = Produto::find($p->produto_id);
+                if ($produto) {
+                    $produto->estoque += $p->quantidade;
+                    $produto->save();
+                }
+            }
+
+            PedidoProduto::where('pedido_id', $pedido->id)->delete();
+            $pedido->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'sucesso',
+                'mensagem' => 'Pedido removido com sucesso!'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'erro', 'mensagem' => 'Erro ao excluir: ' . $e->getMessage()], 500);
+        }
     }
 }

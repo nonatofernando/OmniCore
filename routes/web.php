@@ -21,7 +21,9 @@ Route::middleware('auth.session')->group(function () {
         Route::get('/', [PedidosController::class, 'index'])->name('pedidos');
         Route::get('/get-pedidos', [PedidosController::class, 'getPedidos'])->name('pedidos.get');
         Route::post('/salvar', [PedidosController::class, 'salvar']);
-        Route::get('/get-detalhes/{id}', [PedidosController::class, 'detalhes']);
+        Route::get('/detalhes/{id}', [PedidosController::class, 'detalhes']);
+        Route::post('/atualizar/{id}', [PedidosController::class, 'atualizar']);
+        Route::delete('/excluir/{id}', [PedidosController::class, 'excluir']);
     });
 
     Route::prefix('produtos')->group(function () {
