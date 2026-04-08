@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -14,5 +15,14 @@ class ClientesController extends Controller
         }
 
         return view('clientes');
+    }
+
+    public function getClientes(Request $request)
+    {
+        $clientes = Cliente::select('id', 'nome')
+            ->where('usuario_id', $request->id_usuario)
+            ->get();
+
+        return response()->json(['clientes' => $clientes]);
     }
 }
