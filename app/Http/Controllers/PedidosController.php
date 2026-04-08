@@ -72,29 +72,42 @@ class PedidosController extends Controller
             $usuario_id = $request->id_usuario ?? Session::get('id');
 
             $ultimoPedido = Pedido::orderBy('id', 'desc')->first();
-            $numero_pedido = $ultimoPedido ? $ultimoPedido->numero_pedido + 1 : 1;
+            $numero_pedido = $ultimoPedido ? (int)$ultimoPedido->numero_pedido + 1 : 1;
+            $numero_pedido_formatado = str_pad($numero_pedido, 6, '0', STR_PAD_LEFT);
 
-            $pedido = new Pedido();
-            $pedido->numero_pedido = $numero_pedido;
-            $pedido->cliente_id = $request->id_cliente;
-            $pedido->usuario_id = $usuario_id;
-            $pedido->total = $request->valor_total ?? 0;
-            $pedido->status = 'pendente';
-            $pedido->metodo_pagamento = $request->metodo_pagamento ?? 'pix';
-            $pedido->observacoes = $request->obs_pedido ?? null;
-            $pedido->save();
+            $total = 0;
+            foreach ($request->lista_produtos as $item) {
+                if (!empty($item['id_produto']) && !empty($item['qtd_produto'])) {
+                    $produto = Produto::find($item['id_produto']);
+                    if ($produto) {
+                        $total += $produto->preco * $item['qtd_produto'];
+                    }
+                }
+            }
+
+            $pedido = Pedido::create([
+                'numero_pedido' => $numero_pedido_formatado,
+                'cliente_id' => $request->id_cliente,
+                'usuario_id' => $usuario_id,
+                'total' => $total,
+                'status' => 'pendente',
+                'metodo_pagamento' => $request->metodo_pagamento ?? 'pix',
+                'observacoes' => $request->obs_pedido ?? null,
+            ]);
 
             foreach ($request->lista_produtos as $item) {
                 if (!empty($item['id_produto']) && !empty($item['qtd_produto'])) {
-                    PedidoProduto::create([
-                        'pedido_id' => $pedido->id,
-                        'produto_id' => $item['id_produto'],
-                        'quantidade' => $item['qtd_produto'],
-                    ]);
-
                     $produto = Produto::find($item['id_produto']);
                     if ($produto) {
-                        $produto->estoque = max(0, $produto->estoque - $item['qtd_produto']);
+                        $quantidade = (int)$item['qtd_produto'];
+                        PedidoProduto::create([
+                            'pedido_id' => $pedido->id,
+                            'produto_id' => $produto->id,
+                            'quantidade' => $quantidade,
+                        ]);
+
+                        $produto->estoque = max(0, $produto->estoque - $quantidade);
+                        $produto->vendidos += $quantidade;
                         $produto->save();
                     }
                 }
@@ -104,7 +117,7 @@ class PedidosController extends Controller
 
             return response()->json([
                 'status' => 'sucesso',
-                'mensagem' => 'Pedido #' . str_pad($numero_pedido, 6, '0', STR_PAD_LEFT) . ' criado com sucesso!'
+                'mensagem' => "Pedido #{$numero_pedido_formatado} criado com sucesso!"
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -169,7 +182,20 @@ class PedidosController extends Controller
                 $produto = Produto::find($p->produto_id);
                 if ($produto) {
                     $produto->estoque += $p->quantidade;
+                    $produto->vendidos = max(0, $produto->vendidos - $p->quantidade);
                     $produto->save();
+                }
+            }
+
+            PedidoProduto::where('pedido_id', $pedido->id)->delete();
+
+            $total = 0;
+            foreach ($request->lista_produtos as $item) {
+                if (!empty($item['id_produto']) && !empty($item['qtd_produto'])) {
+                    $produto = Produto::find($item['id_produto']);
+                    if ($produto) {
+                        $total += $produto->preco * $item['qtd_produto'];
+                    }
                 }
             }
 
@@ -177,23 +203,23 @@ class PedidosController extends Controller
                 'cliente_id' => $request->id_cliente,
                 'status' => $request->status ?? $pedido->status,
                 'metodo_pagamento' => $request->metodo_pagamento ?? $pedido->metodo_pagamento,
-                'total' => $request->valor_total ?? $pedido->total,
-                'observacoes' => $request->observacoes,
+                'total' => $total,
+                'observacoes' => $request->observacoes ?? $pedido->observacoes,
             ]);
-
-            PedidoProduto::where('pedido_id', $pedido->id)->delete();
 
             foreach ($request->lista_produtos as $item) {
                 if (!empty($item['id_produto']) && !empty($item['qtd_produto'])) {
-                    PedidoProduto::create([
-                        'pedido_id' => $pedido->id,
-                        'produto_id' => $item['id_produto'],
-                        'quantidade' => $item['qtd_produto'],
-                    ]);
-
                     $produto = Produto::find($item['id_produto']);
                     if ($produto) {
-                        $produto->estoque = max(0, $produto->estoque - $item['qtd_produto']);
+                        $quantidade = (int)$item['qtd_produto'];
+                        PedidoProduto::create([
+                            'pedido_id' => $pedido->id,
+                            'produto_id' => $produto->id,
+                            'quantidade' => $quantidade,
+                        ]);
+
+                        $produto->estoque = max(0, $produto->estoque - $quantidade);
+                        $produto->vendidos += $quantidade;
                         $produto->save();
                     }
                 }
@@ -203,7 +229,7 @@ class PedidosController extends Controller
 
             return response()->json([
                 'status' => 'sucesso',
-                'mensagem' => 'Pedido #' . $pedido->numero_pedido . ' atualizado!'
+                'mensagem' => "Pedido #{$pedido->numero_pedido} atualizado!"
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -224,6 +250,7 @@ class PedidosController extends Controller
                 $produto = Produto::find($p->produto_id);
                 if ($produto) {
                     $produto->estoque += $p->quantidade;
+                    $produto->vendidos = max(0, $produto->vendidos - $p->quantidade);
                     $produto->save();
                 }
             }
