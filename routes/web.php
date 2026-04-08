@@ -37,6 +37,10 @@ Route::middleware('auth.session')->group(function () {
         Route::get('/', [RelatoriosController::class, 'index'])->name('relatorios');
     });
     Route::prefix('configuracoes')->group(function () {
+        // Rota para abrir a página (GET)
         Route::get('/', [ConfiguracoesController::class, 'index'])->name('configuracoes');
+
+        // Rota para salvar os dados (POST)
+        Route::post('/salvar', [ConfiguracoesController::class, 'salvar'])->name('configuracoes.salvar');
     });
 });
