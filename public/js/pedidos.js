@@ -320,7 +320,6 @@ function salvarPedido() {
         type: "POST",
         url: "/pedidos/salvar",
         data: {
-            _token: $("meta[name='csrf-token']").attr("content"),
             id_cliente: id_cliente,
             id_usuario: $("#id_usuario_menu").val(),
             valor_total: $("#total").val(),
@@ -360,7 +359,6 @@ function atualizarPedido() {
         type: "POST",
         url: `/pedidos/atualizar/${id}`,
         data: {
-            _token: $("meta[name='csrf-token']").attr("content"),
             id_usuario: $("#id_usuario_menu").val(),
             id_cliente: $("#edit_cliente_id").val(),
             status: $("#edit_status").val(),
