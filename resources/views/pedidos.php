@@ -27,7 +27,7 @@
 
         <div class="flex gap-4 mb-6">
             <div class="flex-1 relative">
-                <input type="text" placeholder="Buscar pedidos..."
+                <input id="buscar_pedidos" type="text" placeholder="Buscar pedidos..."
                     class="w-full bg-[#0f172a] border border-gray-800 rounded-xl py-3 px-11 text-gray-300 focus:outline-none focus:border-cyan-500 transition">
                 <span class="absolute left-4 top-3.5 text-gray-500 text-lg">🔍</span>
             </div>
@@ -37,16 +37,20 @@
                 </svg>
             </button>
             <div class="relative">
-                <select class="appearance-none bg-card border border-gray-800 py-3 px-6 pr-10 rounded-xl text-gray-300 outline-none focus:border-cyan-500">
-                    <option>Todos</option>
-                    <option>Processando</option>
-                    <option>Enviado</option>
+                <select id="filtro_status" class="appearance-none bg-card border border-gray-800 py-3 px-6 pr-10 rounded-xl text-gray-300 outline-none focus:border-cyan-500">
+                    <option value="">Todos</option>
+                    <option value="pendente">Pendente</option>
+                    <option value="processando">Processando</option>
+                    <option value="enviado">Enviado</option>
+                    <option value="entregue">Entregue</option>
+                    <option value="cancelado">Cancelado</option>
                 </select>
                 <span class="absolute right-3 top-4 text-gray-500 pointer-events-none">▼</span>
             </div>
         </div>
 
-        <div class="bg-card rounded-xl overflow-hidden border border-gray-800/50 shadow-2xl">
+        <div class="bg-card rounded-xl overflow-auto border border-gray-800/50 shadow-2xl"
+            style="height: calc(95vh - 180px);">
             <table id="pedidos-table" class="w-full text-left">
                 <thead>
                     <tr class="text-gray-500 text-[10px] uppercase tracking-widest border-b border-gray-800">
@@ -57,7 +61,6 @@
                         <th class="px-6 py-5 text-right font-bold">Ações</th>
                     </tr>
                 </thead>
-
                 <tbody>
                 </tbody>
             </table>
@@ -65,4 +68,5 @@
     </main>
     <script src="/js/pedidos.js"></script>
 </body>
+
 </html>

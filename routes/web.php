@@ -20,14 +20,18 @@ Route::middleware('auth.session')->group(function () {
     Route::prefix('pedidos')->group(function () {
         Route::get('/', [PedidosController::class, 'index'])->name('pedidos');
         Route::get('/get-pedidos', [PedidosController::class, 'getPedidos'])->name('pedidos.get');
+        Route::post('/salvar', [PedidosController::class, 'salvar']);
+        Route::get('/get-detalhes/{id}', [PedidosController::class, 'detalhes']);
     });
 
     Route::prefix('produtos')->group(function () {
         Route::get('/', [ProdutosController::class, 'index'])->name('produtos');
+        Route::get('/get-produtos', [ProdutosController::class, 'getProdutos'])->name('produtos.get');
     });
 
     Route::prefix('clientes')->group(function () {
         Route::get('/', [ClientesController::class, 'index'])->name('clientes');
+        Route::get('/get-clientes', [ClientesController::class, 'getClientes'])->name('clientes.get');
     });
     Route::prefix('relatorios')->group(function () {
         Route::get('/', [RelatoriosController::class, 'index'])->name('relatorios');
