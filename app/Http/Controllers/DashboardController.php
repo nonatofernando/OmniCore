@@ -132,14 +132,12 @@ class DashboardController extends Controller
         $fim_passada = now()->subDays(7)->endOfDay();
 
         $vendas_atual = Pedido::where('usuario_id', $id_usuario)
-            ->where('status', 'entregue')
             ->whereBetween('created_at', [$inicio_atual, $fim_atual])
             ->selectRaw('DATE(created_at) as data, SUM(total) as total')
             ->groupBy('data')
             ->pluck('total', 'data');
 
         $vendas_passada = Pedido::where('usuario_id', $id_usuario)
-            ->where('status', 'entregue')
             ->whereBetween('created_at', [$inicio_passada, $fim_passada])
             ->selectRaw('DATE(created_at) as data, SUM(total) as total')
             ->groupBy('data')

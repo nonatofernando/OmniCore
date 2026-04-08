@@ -108,17 +108,43 @@ function carregarPedidos(filtro = "", busca = "") {
             status: filtro,
             busca: busca,
         },
-        success: (res) => {
-            const tbody = $("#pedidos-table tbody");
+        beforeSend: function () {
+            const tbody = $("#pedidostabletbody");
             tbody.empty();
-            (res.pedidos || []).forEach((pedido) => {
-                const status_classes = {
-                    entregue: "bg-green-500/20 text-green-400",
-                    pendente: "bg-yellow-500/20 text-yellow-400",
-                    processando: "bg-blue-500/20 text-blue-400",
-                    enviado: "bg-purple-500/20 text-purple-400",
-                    cancelado: "bg-red-500/20 text-red-400",
-                };
+            tbody.append(`
+                <tr>
+                    <td colspan="5" class="text-center py-10 text-gray-500 animate-pulse">
+                        Carregando pedidos...
+                    </td>
+                </tr>
+            `);
+        },
+        success: (res) => {
+            const tbody = $("#pedidostabletbody");
+            tbody.empty();
+
+            const pedidos = res.pedidos || [];
+
+            if (pedidos.length === 0) {
+                tbody.append(`
+                    <tr>
+                        <td colspan="5" class="text-center py-10 text-gray-500">
+                            Nenhum pedido encontrado.
+                        </td>
+                    </tr>
+                `);
+                return;
+            }
+
+            const status_classes = {
+                entregue: "bg-green-500/20 text-green-400",
+                pendente: "bg-yellow-500/20 text-yellow-400",
+                processando: "bg-blue-500/20 text-blue-400",
+                enviado: "bg-purple-500/20 text-purple-400",
+                cancelado: "bg-red-500/20 text-red-400",
+            };
+
+            pedidos.forEach((pedido) => {
                 const cor =
                     status_classes[pedido.status] ||
                     "bg-gray-500/20 text-gray-400";
@@ -126,13 +152,29 @@ function carregarPedidos(filtro = "", busca = "") {
                     <tr class="text-gray-300 text-sm border-b border-gray-800 hover:bg-[#0f172a]/50">
                         <td class="px-6 py-4 font-semibold">${pedido.numero_pedido}</td>
                         <td class="px-6 py-4">Cliente #${pedido.cliente_id}</td>
-                        <td class="px-6 py-4"><span class="px-3 py-1 rounded-full text-xs font-bold ${cor}">${pedido.status}</span></td>
+                        <td class="px-6 py-4">
+                            <span class="px-3 py-1 rounded-full text-xs font-bold ${cor}">
+                                ${pedido.status}
+                            </span>
+                        </td>
                         <td class="px-6 py-4 font-semibold">R$ ${parseFloat(pedido.total).toFixed(2)}</td>
                         <td class="px-6 py-4 text-right">
                             <a href="javascript:void(0)" data-id="${pedido.id}" class="btn-ver-detalhes text-cyan-400 hover:text-cyan-300 font-semibold">Editar</a>
                         </td>
-                    </tr>`);
+                    </tr>
+                `);
             });
+        },
+        error: () => {
+            const tbody = $("#pedidostabletbody");
+            tbody.empty();
+            tbody.append(`
+                <tr>
+                    <td colspan="5" class="text-center py-10 text-red-500">
+                        Erro ao carregar pedidos. Tente novamente.
+                    </td>
+                </tr>
+            `);
         },
     });
 }

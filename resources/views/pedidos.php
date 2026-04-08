@@ -61,7 +61,12 @@
                         <th class="px-6 py-5 text-right font-bold">Ações</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="pedidostabletbody">
+                    <tr>
+                        <td colspan="5" class="text-center py-10 text-gray-500">
+                            Nenhum pedido encontrado.
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
