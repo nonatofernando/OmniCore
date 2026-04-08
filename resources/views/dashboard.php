@@ -99,7 +99,7 @@
             </div>
 
             <div class="bg-card p-6 rounded-xl">
-                <div id="performanceChart" ></div>
+                <div id="performanceChart"></div>
             </div>
         </div>
     </main>
