@@ -31,11 +31,6 @@
                     class="w-full bg-[#0f172a] border border-gray-800 rounded-xl py-3 px-11 text-gray-300 focus:outline-none focus:border-cyan-500 transition">
                 <span class="absolute left-4 top-3.5 text-gray-500 text-lg">🔍</span>
             </div>
-            <button class="bg-card border border-gray-800 p-3 rounded-xl hover:bg-gray-800 transition">
-                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18L14 12v7l-4 3v-10L3 4z" />
-                </svg>
-            </button>
             <div class="relative">
                 <select id="filtro_status" class="appearance-none bg-card border border-gray-800 py-3 px-6 pr-10 rounded-xl text-gray-300 outline-none focus:border-cyan-500">
                     <option value="">Todos</option>
