@@ -1,3 +1,14 @@
+$(document).ready(function () {
+    popular_select_clientes("id_novo_produto_cliente_select");
+    popular_select_produtos("id_novo_produto_select");
+    
+    $(".close-modal-btn, .close-modal-trigger").click(function() {
+        $("#modal_novo_pedido").addClass("hidden").removeClass("flex");
+        $("body").css("overflow", "auto"); 
+    });
+
+});
+
 function mostrarFeedback(tipo, titulo, mensagem) {
     const modal = $("#modal_feedback");
     const icon = $("#modal_feedback_icon");
@@ -44,7 +55,6 @@ function mostrarFeedback(tipo, titulo, mensagem) {
 
 /**
  * Popula qualquer select de clientes (sem seleção automática)
- *
  * @param {string} select_id - ID do select que será preenchido
  */
 function popular_select_clientes(select_id) {
@@ -60,20 +70,50 @@ function popular_select_clientes(select_id) {
             $select.html('<option value="">Carregando...</option>');
         },
         success: function (res) {
-            let options = '<option value="">Selecione um cliente</option>';
+            let options_html = '<option value="">Selecione um cliente</option>';
+            (res.clientes || []).forEach(
+                (cliente) =>
+                    (options_html += `<option value="${cliente.id}">${cliente.nome}</option>`),
+            );
+            $("#id_novo_produto_cliente_select").html(options_html);
+        },
+        error: function () {
+            $select.html('<option value="">Erro ao carregar clientes</option>');
+        },
+    });
+}
 
-            (res.clientes || []).forEach((c) => {
-                options += `
-                    <option value="${c.id}">
-                        ${c.nome}
+/**
+ * Preenche um elemento select com a lista de produtos disponíveis.
+ * @param {string} select_id - ID do select
+ */
+function popular_select_produtos(select_id) {
+    const $select = $("#" + select_id);
+
+    $.ajax({
+        type: "GET",
+        url: "/produtos/get-produtos",
+        data: { 
+            id_usuario: $("#id_usuario_menu").val() 
+        },
+        beforeSend: function () {
+            $select.html('<option value="">Carregando...</option>');
+        },
+        success: function (res) {
+            let options_html = '<option value="">Selecione um produto</option>';
+
+            (res.produtos || []).forEach((p) => {
+                options_html += `
+                    <option value="${p.id}" data-preco="${p.preco}">
+                        ${p.nome} - R$ ${parseFloat(p.preco).toFixed(2)}
                     </option>
                 `;
             });
 
-            $select.html(options);
+            $select.html(options_html);
         },
         error: function () {
-            $select.html('<option value="">Erro ao carregar clientes</option>');
+            $select.html('<option value="">Erro ao carregar produtos</option>');
         },
     });
 }
