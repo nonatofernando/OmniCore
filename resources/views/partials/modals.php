@@ -87,37 +87,39 @@
             <button class="close-modal-btn text-gray-500 hover:text-white text-3xl leading-none transition">&times;</button>
         </header>
 
-        <div class="p-6 overflow-y-auto space-y-5">
+        <div class="bg-[#0f172a] p-6 overflow-y-auto space-y-5">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
                 <div class="md:col-span-2">
                     <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Nome do Produto *</label>
-                    <input type="text" id="nome_produto" placeholder="Ex: Teclado Mecânico RGB" class="w-full bg-[#0f172a] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
+                    <input type="text" id="nome_produto" placeholder="Ex: Teclado Mecânico RGB" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
                 </div>
 
                 <div class="md:col-span-2">
                     <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Descrição</label>
-                    <textarea id="descricao_produto" rows="2" placeholder="Detalhes do produto..." class="w-full bg-[#0f172a] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition"></textarea>
+                    <textarea id="descricao_produto" rows="2" placeholder="Detalhes do produto..." class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition"></textarea>
                 </div>
 
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Preço de Venda (R$) *</label>
-                    <input type="number" step="0.01" id="preco_produto" placeholder="0.00" class="w-full bg-[#0f172a] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
+                    <input type="number" step="0.01" id="preco_produto" placeholder="0.00" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
                 </div>
+
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Custo (R$)</label>
-                    <input type="number" step="0.01" id="custo_produto" placeholder="0.00" class="w-full bg-[#0f172a] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
+                    <input type="number" step="0.01" id="custo_produto" placeholder="0.00" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
                 </div>
 
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Categoria</label>
-                    <select id="categoria_produto" class="w-full bg-[#0f172a] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
+                    <select id="categoria_produto" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
                         <option value="">Sem Categoria</option>
                     </select>
                 </div>
+
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Status</label>
-                    <select id="status_produto" class="w-full bg-[#0f172a] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
+                    <select id="status_produto" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
                         <option value="ativo">Ativo</option>
                         <option value="inativo">Inativo</option>
                     </select>
@@ -128,10 +130,12 @@
                         <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Estoque Atual</label>
                         <input type="number" id="estoque_produto" value="0" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
                     </div>
+
                     <div>
                         <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Estoque Mín.</label>
                         <input type="number" id="estoque_minimo_produto" value="0" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
                     </div>
+
                     <div>
                         <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Estoque Máx.</label>
                         <input type="number" id="estoque_maximo_produto" placeholder="Opcional" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
@@ -140,7 +144,7 @@
 
                 <div class="md:col-span-2">
                     <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">URL da Imagem</label>
-                    <input type="text" id="imagem_url_produto" placeholder="https://..." class="w-full bg-[#0f172a] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
+                    <input type="text" id="imagem_url_produto" placeholder="https://..." class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
                 </div>
 
             </div>
@@ -154,7 +158,6 @@
     </div>
 </div>
 
-
 <div id="modal_detalhes_produto" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity">
     <div class="bg-[#020617] w-full max-w-3xl max-h-[90vh] rounded-2xl border border-gray-800 shadow-2xl flex flex-col relative">
 
@@ -165,45 +168,45 @@
             <button class="close-modal-btn text-gray-500 hover:text-white text-3xl leading-none transition">&times;</button>
         </header>
 
-        <div class="p-6 overflow-y-auto space-y-5">
+        <div class="bg-[#0f172a] p-6 overflow-y-auto space-y-5">
             <input type="hidden" id="edit_produto_id">
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
                 <div class="md:col-span-2">
                     <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Nome do Produto *</label>
-                    <input type="text" id="edit_nome_produto" class="w-full bg-[#0f172a] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
+                    <input type="text" id="edit_nome_produto" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
                 </div>
 
                 <div class="md:col-span-2">
                     <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Descrição</label>
-                    <textarea id="edit_descricao_produto" rows="2" class="w-full bg-[#0f172a] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition"></textarea>
+                    <textarea id="edit_descricao_produto" rows="2" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition"></textarea>
                 </div>
 
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Preço de Venda (R$) *</label>
-                    <input type="number" step="0.01" id="edit_preco_produto" class="w-full bg-[#0f172a] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
+                    <input type="number" step="0.01" id="edit_preco_produto" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Custo (R$)</label>
-                    <input type="number" step="0.01" id="edit_custo_produto" class="w-full bg-[#0f172a] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
+                    <input type="number" step="0.01" id="edit_custo_produto" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
                 </div>
 
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Categoria</label>
-                    <select id="edit_categoria_produto" class="w-full bg-[#0f172a] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
+                    <select id="edit_categoria_produto" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
                         <option value="">Sem Categoria</option>
                     </select>
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Status</label>
-                    <select id="edit_status_produto" class="w-full bg-[#0f172a] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
+                    <select id="edit_status_produto" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
                         <option value="ativo">Ativo</option>
                         <option value="inativo">Inativo</option>
                     </select>
                 </div>
 
-                <div class="md:col-span-2 grid grid-cols-3 gap-5 bg-cyan-500/5 p-4 rounded-xl border border-cyan-500/10">
+                <div class="bg-[#020617]/50 md:col-span-2 grid grid-cols-3 gap-5 bg-cyan-500/5 p-4 rounded-xl border border-cyan-500/10">
                     <div>
                         <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Estoque Atual</label>
                         <input type="number" id="edit_estoque_produto" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
@@ -220,7 +223,7 @@
 
                 <div class="md:col-span-2">
                     <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">URL da Imagem</label>
-                    <input type="text" id="edit_imagem_url_produto" class="w-full bg-[#0f172a] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
+                    <input type="text" id="edit_imagem_url_produto" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
                 </div>
 
             </div>
@@ -236,6 +239,7 @@
         </footer>
     </div>
 </div>
+
 <div id="modal_feedback" class="fixed inset-0 z-[110] hidden flex-col items-center justify-center bg-black/60 backdrop-blur-sm">
     <div class="bg-[#020617] border border-gray-800 rounded-2xl w-full max-w-md p-6 shadow-xl animate-fade-in">
         <div class="flex justify-center mb-4">
@@ -248,6 +252,7 @@
         </div>
     </div>
 </div>
+
 <style>
     @keyframes fadeIn {
         from {
