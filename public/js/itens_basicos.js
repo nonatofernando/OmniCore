@@ -41,3 +41,39 @@ function mostrarFeedback(tipo, titulo, mensagem) {
         modal.addClass("hidden").css("display", "none");
     });
 }
+
+/**
+ * Popula qualquer select de clientes (sem seleção automática)
+ *
+ * @param {string} select_id - ID do select que será preenchido
+ */
+function popular_select_clientes(select_id) {
+    const $select = $("#" + select_id);
+
+    $.ajax({
+        type: "GET",
+        url: "/clientes/get-clientes",
+        data: {
+            id_usuario: $("#id_usuario_menu").val(),
+        },
+        beforeSend: function () {
+            $select.html('<option value="">Carregando...</option>');
+        },
+        success: function (res) {
+            let options = '<option value="">Selecione um cliente</option>';
+
+            (res.clientes || []).forEach((c) => {
+                options += `
+                    <option value="${c.id}">
+                        ${c.nome}
+                    </option>
+                `;
+            });
+
+            $select.html(options);
+        },
+        error: function () {
+            $select.html('<option value="">Erro ao carregar clientes</option>');
+        },
+    });
+}
