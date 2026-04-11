@@ -1,60 +1,73 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Produtos | Admin</title>
+    <link rel="stylesheet" href="/css/produtos.css"> 
     <link rel="shortcut icon" href="/imgs/logo.png" type="image/x-icon">
-    <link rel="stylesheet" href="/css/produtos.css">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<body class="flex min-h-screen">
+
+<body class="flex min-h-screen bg-[#020617] text-white">
 
     <?php include resource_path('views/partials/menu_lateral.php'); ?>
 
     <main class="flex-1 p-8">
-        <header class="flex justify-between items-center mb-6">
+        <header class="flex justify-between items-center mb-8">
             <div>
                 <h1 class="text-3xl font-bold">Produtos</h1>
-                <p class="text-gray-400 text-sm"><?= count($produtos) ?> produtos cadastrados</p>
+                <p class="text-gray-400 text-sm" id="total_produtos">Carregando...</p>
             </div>
-            <button class="bg-[#00e5ff] hover:bg-cyan-400 text-black px-5 py-2.5 rounded-lg font-bold flex items-center gap-2 transition btn-glow">
+            <button id="btn_novo_produto" class="bg-[#00e5ff] hover:bg-cyan-400 text-black px-5 py-2.5 rounded-lg font-bold flex items-center gap-2 transition shadow-[0_0_15px_rgba(0,229,255,0.3)]">
                 <span class="text-xl">+</span> Novo Produto
             </button>
         </header>
 
-        <div class="mb-10 max-w-sm">
+        <div class="flex gap-4 mb-6">
+            <div class="flex-1 relative">
+                <input id="input_busca" type="text" placeholder="Buscar produtos por nome"
+                    class="w-full bg-[#0f172a] border border-gray-800 rounded-xl py-3 px-11 text-gray-300 focus:outline-none focus:border-cyan-500 transition">
+                <span class="absolute left-4 top-3.5 text-gray-500 text-lg">🔍</span>
+            </div>
+            <button class="bg-card border border-gray-800 p-3 rounded-xl hover:bg-gray-800 transition">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18L14 12v7l-4 3v-10L3 4z" />
+                </svg>
+            </button>
             <div class="relative">
-                <input type="text" id="inputBusca" placeholder="Buscar produtos..." 
-                       class="w-full bg-[#0f172a] border border-gray-800 rounded-xl py-3 px-11 text-gray-300 focus:outline-none focus:border-cyan-500 transition">
-                <span class="absolute left-4 top-3.5 text-gray-500">🔍</span>
+                <select id="filtro_categoria" class="appearance-none bg-card border border-gray-800 py-3 px-6 pr-10 rounded-xl text-gray-300 outline-none focus:border-cyan-500">
+                    <option value="">Todas as Categorias</option>
+                    </select>
+                <span class="absolute right-3 top-4 text-gray-500 pointer-events-none">▼</span>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="gridProdutos">
-            <?php foreach ($produtos as $produto): ?>
-                <div class="bg-card p-6 rounded-2xl border border-gray-800/50 hover:border-cyan-500/30 transition-all duration-300 group product-card">
-                    <div class="w-12 h-12 bg-cyan-950/30 border border-cyan-800/40 rounded-xl flex items-center justify-center text-cyan-400 mb-5 text-xl">
-                        📦
-                    </div>
-
-                    <h3 class="font-bold text-lg mb-1 group-hover:text-cyan-400 transition"><?= $produto->nome ?></h3>
-                    <p class="text-gray-500 text-xs uppercase tracking-tighter mb-4"><?= $produto->categoria ?></p>
-
-                    <div class="flex justify-between items-end">
-                        <div>
-                            <p class="text-cyan-400 text-2xl font-bold">R$ <?= number_format($produto->preco, 2, ',', '.') ?></p>
-                            <p class="text-gray-500 text-xs mt-2">Estoque: <span class="text-gray-300"><?= $produto->estoque ?></span></p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-amber-400 font-bold text-sm mb-2">★ <?= number_format($produto->nota, 1) ?></p>
-                            <p class="text-gray-500 text-[11px]"><?= $produto->vendidos ?> vendidos</p>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
+        <div class="bg-card rounded-xl overflow-auto border border-gray-800/50 shadow-2xl"
+            style="height: calc(95vh - 180px);">
+            <table id="produtos-table" class="w-full text-left">
+                <thead>
+                    <tr class="text-gray-500 text-[10px] uppercase tracking-widest border-b border-gray-800">
+                        <th class="px-6 py-5 font-bold">Produto</th>
+                        <th class="px-6 py-5 font-bold">Categoria</th>
+                        <th class="px-6 py-5 font-bold">Preço</th>
+                        <th class="px-6 py-5 font-bold">Estoque</th>
+                        <th class="px-6 py-5 text-right font-bold">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="produtos_table_tbody">
+                    <tr>
+                        <td colspan="5" class="text-center py-10 text-gray-500">
+                            Nenhum produto encontrado.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </main>
-
+    
     <script src="/js/produtos.js"></script>
 </body>
+
 </html>

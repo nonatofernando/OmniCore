@@ -1,5 +1,3 @@
-<?php include resource_path('views/partials/modals.php'); ?>
-
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 <link rel="stylesheet" href="/css/menu_lateral.css">
 
@@ -34,15 +32,12 @@
         </div>
         <small>Todos os serviços operacionais</small>
     </div>
-
 </aside>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/highcharts@11.4.1/highcharts.js"></script>
-
 <script src="https://cdn.tailwindcss.com"></script>
-
 <script src="/js/itens_basicos.js"></script>
 <script src="/js/menu_lateral.js"></script>
 <script src="/js/dashboard.js"></script>
+<?php include resource_path('views/partials/modals.php'); ?>
