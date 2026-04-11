@@ -36,10 +36,15 @@ Route::middleware('auth.session')->group(function () {
         Route::delete('/excluir/{id}', [ProdutosController::class, 'excluir'])->name('produtos.excluir');
     });
 
-    Route::prefix('clientes')->group(function () {
+    Route::prefix('clientes')->group(function () { 
         Route::get('/', [ClientesController::class, 'index'])->name('clientes');
-        Route::get('/get-clientes', [ClientesController::class, 'getClientes'])->name('clientes.get');
+        Route::get('/get-clientes', [ClientesController::class, 'get_clientes'])->name('clientes.get');
+        Route::post('/salvar', [ClientesController::class, 'salvar'])->name('clientes.salvar');
+        Route::get('/detalhes/{id}', [ClientesController::class, 'detalhes'])->name('clientes.detalhes');
+        Route::post('/atualizar/{id}', [ClientesController::class, 'atualizar'])->name('clientes.atualizar');
+        Route::delete('/excluir/{id}', [ClientesController::class, 'excluir'])->name('clientes.excluir');
     });
+    
     Route::prefix('relatorios')->group(function () {
         Route::get('/', [RelatoriosController::class, 'index'])->name('relatorios');
     });
