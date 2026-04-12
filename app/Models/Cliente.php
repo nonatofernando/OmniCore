@@ -9,6 +9,7 @@ class Cliente extends Model
     protected $table = 'clientes';
 
     protected $fillable = [
+        'usuario_id',
         'nome',
         'email',
         'telefone',
@@ -22,6 +23,4 @@ class Cliente extends Model
     {
         return $this->hasMany(Pedido::class, 'cliente_id');
     }
-
-    
 }

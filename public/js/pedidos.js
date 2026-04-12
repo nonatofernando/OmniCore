@@ -113,7 +113,7 @@ function carregarPedidos(filtro = "", busca = "") {
             tbody.empty();
             tbody.append(`
                 <tr>
-                    <td colspan="5" class="text-center py-10 text-gray-500 animate-pulse">
+                    <td colspan="5" class="text-center py-10 text-cyan-500 animate-pulse font-bold">
                         Carregando pedidos...
                     </td>
                 </tr>
