@@ -47,6 +47,7 @@ Route::middleware('auth.session')->group(function () {
     
     Route::prefix('relatorios')->group(function () {
         Route::get('/', [RelatoriosController::class, 'index'])->name('relatorios');
+        Route::get('/get-dados', [RelatoriosController::class, 'getDados'])->name('relatorios.dados');
     });
     Route::prefix('configuracoes')->group(function () {
         Route::get('/', [ConfiguracoesController::class, 'index'])->name('configuracoes');
