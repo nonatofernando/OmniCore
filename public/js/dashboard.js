@@ -311,4 +311,8 @@ function render_performance(performance) {
         credits: { enabled: false },
         exporting: { enabled: true },
     });
+
+    const loader =
+        document.querySelector("#performanceChart").previousElementSibling;
+    if (loader) loader.style.display = "none";
 }

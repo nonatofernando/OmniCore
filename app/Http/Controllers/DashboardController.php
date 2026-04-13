@@ -33,6 +33,7 @@ class DashboardController extends Controller
         $hoje = now();
         $ontem = now()->subDay();
 
+
         $pedidos_hoje = Pedido::where('usuario_id', $id_usuario)
             ->whereBetween('created_at', [$hoje->copy()->startOfDay(), $hoje->copy()->endOfDay()]);
 
@@ -41,10 +42,8 @@ class DashboardController extends Controller
         $entregues = (clone $pedidos_hoje)->where('status', 'entregue')->count();
         $cancelados = (clone $pedidos_hoje)->where('status', 'cancelado')->count();
 
-        $receita = (clone $pedidos_hoje)
-            ->where('status', 'entregue')
-            ->sum('total');
 
+        $receita = (clone $pedidos_hoje)->sum('total');
 
         $pedidos_ontem_query = Pedido::where('usuario_id', $id_usuario)
             ->whereBetween('created_at', [$ontem->copy()->startOfDay(), $ontem->copy()->endOfDay()]);
@@ -52,29 +51,27 @@ class DashboardController extends Controller
         $pedidos_ontem = (clone $pedidos_ontem_query)->count();
         $pendentes_ontem = (clone $pedidos_ontem_query)->where('status', 'pendente')->count();
         $entregues_ontem = (clone $pedidos_ontem_query)->where('status', 'entregue')->count();
+        $receita_ontem = (clone $pedidos_ontem_query)->sum('total');
 
-        $receita_ontem = (clone $pedidos_ontem_query)
-            ->where('status', 'entregue')
-            ->sum('total');
 
         $pedidos = Pedido::where('usuario_id', $id_usuario)
             ->latest()
             ->take(5)
             ->get();
 
+
         $produtos = Produto::where('usuario_id', $id_usuario)
             ->orderBy('vendidos', 'desc')
             ->take(5)
             ->get();
 
+
         $receita_atual = Pedido::where('usuario_id', $id_usuario)
             ->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()])
-            ->where('status', 'entregue')
             ->sum('total');
 
         $receita_passado = Pedido::where('usuario_id', $id_usuario)
             ->whereBetween('created_at', [now()->subMonth()->startOfMonth(), now()->subMonth()->endOfMonth()])
-            ->where('status', 'entregue')
             ->sum('total');
 
         $crescimento_receita = ($receita_passado > 0)
@@ -127,6 +124,7 @@ class DashboardController extends Controller
             'crescimento_taxa' => $crescimento_taxa
         ];
 
+
         $inicio_atual = now()->subDays(6)->startOfDay();
         $fim_atual = now()->endOfDay();
 
@@ -134,14 +132,12 @@ class DashboardController extends Controller
         $fim_passada = now()->subDays(7)->endOfDay();
 
         $vendas_atual = Pedido::where('usuario_id', $id_usuario)
-            ->where('status', 'entregue')
             ->whereBetween('created_at', [$inicio_atual, $fim_atual])
             ->selectRaw('DATE(created_at) as data, SUM(total) as total')
             ->groupBy('data')
             ->pluck('total', 'data');
 
         $vendas_passada = Pedido::where('usuario_id', $id_usuario)
-            ->where('status', 'entregue')
             ->whereBetween('created_at', [$inicio_passada, $fim_passada])
             ->selectRaw('DATE(created_at) as data, SUM(total) as total')
             ->groupBy('data')
@@ -156,7 +152,6 @@ class DashboardController extends Controller
             $data_passada = now()->subDays($i + 7)->format('Y-m-d');
 
             $labels[] = now()->subDays($i)->format('d/m');
-
             $serie_atual[] = (float) ($vendas_atual[$data] ?? 0);
             $serie_passada[] = (float) ($vendas_passada[$data_passada] ?? 0);
         }

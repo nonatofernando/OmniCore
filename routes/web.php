@@ -21,20 +21,33 @@ Route::middleware('auth.session')->group(function () {
         Route::get('/', [PedidosController::class, 'index'])->name('pedidos');
         Route::get('/get-pedidos', [PedidosController::class, 'getPedidos'])->name('pedidos.get');
         Route::post('/salvar', [PedidosController::class, 'salvar']);
-        Route::get('/get-detalhes/{id}', [PedidosController::class, 'detalhes']);
+        Route::get('/detalhes/{id}', [PedidosController::class, 'detalhes']);
+        Route::post('/atualizar/{id}', [PedidosController::class, 'atualizar']);
+        Route::delete('/excluir/{id}', [PedidosController::class, 'excluir']);
     });
 
     Route::prefix('produtos')->group(function () {
         Route::get('/', [ProdutosController::class, 'index'])->name('produtos');
-        Route::get('/get-produtos', [ProdutosController::class, 'getProdutos'])->name('produtos.get');
+        Route::get('/get-produtos', [ProdutosController::class, 'getprodutos'])->name('produtos.get');
+        Route::get('/detalhes/{id}', [ProdutosController::class, 'detalhes'])->name('produtos.detalhes');
+        Route::get('/get-categorias', [ProdutosController::class, 'getcategorias'])->name('produtos.categorias');
+        Route::post('/salvar', [ProdutosController::class, 'salvar'])->name('produtos.salvar');
+        Route::post('/atualizar/{id}', [ProdutosController::class, 'atualizar'])->name('produtos.atualizar');
+        Route::delete('/excluir/{id}', [ProdutosController::class, 'excluir'])->name('produtos.excluir');
     });
 
-    Route::prefix('clientes')->group(function () {
+    Route::prefix('clientes')->group(function () { 
         Route::get('/', [ClientesController::class, 'index'])->name('clientes');
-        Route::get('/get-clientes', [ClientesController::class, 'getClientes'])->name('clientes.get');
+        Route::get('/get-clientes', [ClientesController::class, 'get_clientes'])->name('clientes.get');
+        Route::post('/salvar', [ClientesController::class, 'salvar'])->name('clientes.salvar');
+        Route::get('/detalhes/{id}', [ClientesController::class, 'detalhes'])->name('clientes.detalhes');
+        Route::post('/atualizar/{id}', [ClientesController::class, 'atualizar'])->name('clientes.atualizar');
+        Route::delete('/excluir/{id}', [ClientesController::class, 'excluir'])->name('clientes.excluir');
     });
+    
     Route::prefix('relatorios')->group(function () {
         Route::get('/', [RelatoriosController::class, 'index'])->name('relatorios');
+        Route::get('/get-dados', [RelatoriosController::class, 'getDados'])->name('relatorios.dados');
     });
     Route::prefix('configuracoes')->group(function () {
         // Rota para abrir a página (GET)

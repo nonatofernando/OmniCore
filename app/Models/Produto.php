@@ -27,4 +27,9 @@ class Produto extends Model
             ->withPivot('quantidade', 'preco_unitario')
             ->withTimestamps();
     }
+
+    public function categoria_dados()
+    {
+        return $this->belongsTo(Categoria::class, 'categoria_id');
+    }
 }
