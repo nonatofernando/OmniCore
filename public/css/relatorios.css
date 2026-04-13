@@ -15,3 +15,7 @@ body {
 canvas {
     max-width: 100% !important;
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}

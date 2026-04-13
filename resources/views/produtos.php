@@ -39,8 +39,8 @@
             </div>
         </div>
 
-        <div class="bg-card rounded-xl overflow-auto border border-gray-800/50 shadow-2xl"
-            style="height: calc(95vh - 180px);">
+        <div class="bg-card rounded-xl overflow-auto scrollbar-hide border border-gray-800/50 shadow-2xl"
+     style="height: calc(95vh - 180px);">
             <table id="produtos-table" class="w-full text-left">
                 <thead>
                     <tr class="text-gray-500 text-[10px] uppercase tracking-widest border-b border-gray-800">
