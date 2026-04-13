@@ -35,9 +35,9 @@
 </aside>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/highcharts@11.4.1/highcharts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="/js/itens_basicos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highcharts@11.4.1/highcharts.js"></script> <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <script src="/js/itens_basicos.js"></script>
 <script src="/js/menu_lateral.js"></script>
 <script src="/js/dashboard.js"></script>
 <?php include resource_path('views/partials/modals.php'); ?>
