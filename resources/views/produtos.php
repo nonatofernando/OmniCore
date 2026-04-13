@@ -7,7 +7,6 @@
     <title>Produtos | Admin</title>
     <link rel="stylesheet" href="/css/produtos.css"> 
     <link rel="shortcut icon" href="/imgs/logo.png" type="image/x-icon">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
 <body class="flex min-h-screen bg-[#020617] text-white">
