@@ -1,25 +1,70 @@
 :root {
     --bg-dark: #020617;
-    --card-dark: #0b1120;
+    --card-dark: #0f172a;
+    --border-color: rgba(30, 41, 59, 0.5);
+    --accent-cyan: #00e5ff;
 }
 
+/* Sincronizado com Dashboard.css */
 body {
     background-color: var(--bg-dark);
+    color: #f9fafb;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden; /* Mantém a sidebar fixa na tela */
 }
 
+/* Scroll interno apenas para o conteúdo */
+main {
+    height: 100vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #1e293b transparent;
+}
+
+/* Garante que a sidebar do partial use a altura total para o mt-auto funcionar */
+.sidebar {
+    height: 100vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.sidebar-footer {
+    margin-top: auto !important;
+    flex-shrink: 0;
+}
+
+/* Estilização dos Cards */
 .bg-card {
-    background-color: var(--card-dark);
+    background: linear-gradient(145deg, #0f172a, #0b1120);
+    border: 1px solid var(--border-color);
 }
 
 .btn-glow {
-    box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
+    transition: all 0.3s ease;
 }
 
-/* Estilo para focar nos inputs */
+.btn-glow:hover {
+    box-shadow: 0 0 25px rgba(0, 229, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+/* Inputs */
+input {
+    background: #020617 !important;
+    border: 1px solid #1e293b !important;
+    color: #e2e8f0 !important;
+}
+
 input:focus {
-    box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.1);
+    border-color: var(--accent-cyan) !important;
+    box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.05);
+    outline: none;
 }
 
-.scrollbar-hide::-webkit-scrollbar {
-    display: none;
-}
+/* Scrollbar Customizada do Main */
+main::-webkit-scrollbar { width: 8px; }
+main::-webkit-scrollbar-track { background: var(--bg-dark); }
+main::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }

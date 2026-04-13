@@ -27,4 +27,10 @@ class Usuario extends Authenticatable
     {
         return $this->senha;
     }
+
+    public function empresa()
+    {
+        // Isso diz ao Laravel que a coluna 'empresa_id' aponta para uma Empresa
+        return $this->belongsTo(Empresa::class, 'empresa_id');
+    }
 }
