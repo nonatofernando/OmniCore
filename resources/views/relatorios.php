@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatórios | Admin</title>
     <link rel="stylesheet" href="/css/relatorios.css">
+    <link rel="shortcut icon" href="/imgs/logo.png" type="image/x-icon">
 </head>
 
 <body class="flex h-screen overflow-hidden">
