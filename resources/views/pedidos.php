@@ -7,7 +7,6 @@
     <title>Pedidos | Admin</title>
     <link rel="stylesheet" href="/css/pedidos.css">
     <link rel="shortcut icon" href="/imgs/logo.png" type="image/x-icon">
-
 </head>
 
 <body class="flex min-h-screen bg-[#020617] text-white">

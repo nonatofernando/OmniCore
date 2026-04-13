@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    popular_select_clientes("id_cliente_select");
     $("#filtro_status").val("");
     carregarPedidos();
     getDadosClientes();
@@ -261,32 +262,12 @@ function abrirModalEdicao(id) {
                 </div>`;
 
             $body.html(html);
-            popularSelectClientesEdicao(p.cliente ? p.cliente.id : null);
-            $(".prod_id_edicao").each(function () {
-                popularSelectProduto($(this));
-            });
+            popular_select_clientes("edit_cliente_id");
         },
     });
 }
 
-/**
- * Preenche o elemento select de clientes dentro do modal de edição.
- * * @param {number|null} selectedId - ID do cliente que deve vir selecionado por padrão.
- */
-function popularSelectClientesEdicao(selectedId) {
-    $.ajax({
-        type: "GET",
-        url: "/clientes/get-clientes",
-        data: { id_usuario: $("#id_usuario_menu").val() },
-        success: function (res) {
-            let options = '<option value="">Selecione um cliente</option>';
-            (res.clientes || []).forEach((c) => {
-                options += `<option value="${c.id}" ${c.id == selectedId ? "selected" : ""}>${c.nome}</option>`;
-            });
-            $("#edit_cliente_id").html(options);
-        },
-    });
-}
+
 
 /**
  * Preenche um elemento select com a lista de produtos disponíveis.

@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatórios | Admin</title>
     <link rel="stylesheet" href="/css/relatorios.css">
 </head>
-<body class="flex min-h-screen">
+
+<body class="flex h-screen overflow-hidden">
 
     <?php include resource_path('views/partials/menu_lateral.php'); ?>
 
-    <main class="flex-1 p-8">
+    <main class="flex-1 p-8 overflow-hidden">
         <header class="mb-8">
             <h1 class="text-3xl font-bold text-white">Relatórios</h1>
             <p class="text-gray-400 text-sm">Análise detalhada do seu negócio</p>
@@ -35,8 +37,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="bg-card p-8 rounded-2xl border border-gray-800/50">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-220px)] overflow-y-auto scrollbar-hide auto-rows-max">            <div class="bg-card p-8 rounded-2xl border border-gray-800/50">
                 <h3 class="text-white font-bold mb-6">Faturamento Mensal</h3>
                 <div class="h-[300px]">
                     <canvas id="chartFaturamento"></canvas>
@@ -82,4 +83,5 @@
 
     <script src="/js/relatorios.js"></script>
 </body>
+
 </html>

@@ -30,3 +30,16 @@ input#inputBusca::placeholder {
 .product-card {
     transition: all 0.3s ease;
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+}
+
+.scrollbar-hide {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge antigo */
+}
