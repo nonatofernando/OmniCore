@@ -38,7 +38,7 @@
             </div>
         </div>
 
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-220px)] overflow-y-auto scrollbar-hide auto-rows-max">            <div class="bg-card p-8 rounded-2xl border border-gray-800/50">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-280px)] overflow-y-auto scrollbar-hide auto-rows-max">            <div class="bg-card p-8 rounded-2xl border border-gray-800/50">
                 <h3 class="text-white font-bold mb-6">Faturamento Mensal</h3>
                 <div class="h-[300px]">
                     <canvas id="chartFaturamento"></canvas>
