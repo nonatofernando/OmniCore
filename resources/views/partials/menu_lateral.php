@@ -11,8 +11,8 @@
 <aside class="sidebar">
     <div>
         <div class="sidebar-header">
-            <img src="/imgs/logo.png" alt="OmniCore">
-            <h1>OmniCore</h1>
+            <img src="/imgs/logo.png" alt="CoreOmni">
+            <h1>CoreOmni</h1>
         </div>
 
         <nav class="sidebar-nav">
