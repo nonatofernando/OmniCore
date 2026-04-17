@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    popular_select_clientes("id_cliente_select");
+    popular_select_clientes("id_novo_produto_cliente_select");
     $("#filtro_status").val("");
     carregarPedidos();
     getDadosClientes();
@@ -8,7 +8,7 @@ $(document).ready(function () {
         limparFormularioPedido();
         $("#modal_novo_pedido").removeClass("hidden").css("display", "flex");
         $("body").addClass("overflow-hidden");
-        popularSelectProduto($(".produto_id"));
+        popularSelectProduto($("#produtos_container .produto_id"));
     });
 
     $(document).on("click", ".btn-ver-detalhes", function (e) {
@@ -31,51 +31,41 @@ $(document).ready(function () {
         carregarPedidos($("#filtro_status").val(), $(this).val());
     });
 
-    $(document).on(
-        "click",
-        "#adicionar_produto, #add_produto_edicao",
-        function () {
-            const isEdicao = $(this).attr("id") === "add_produto_edicao";
-            const container = isEdicao
-                ? "#produtos_edicao_container"
-                : "#produtos_container";
+    $(document).on("click", "#adicionar_produto, #add_produto_edicao", function () {
+        const isEdicao = $(this).attr("id") === "add_produto_edicao";
+        const container = isEdicao ? "#produtos_edicao_container" : "#produtos_container";
+        const itemClass = isEdicao ? "produto_item_edicao" : "produto_item";
+        const selectClass = isEdicao ? "prod_id_edicao" : "produto_id";
+        const inputClass = isEdicao ? "prod_qtd_edicao" : "quantidade";
+        const btnClass = isEdicao ? "remover_prod_edicao" : "remover_produto";
 
-            const html = `
-            <div class="${isEdicao ? "produto_item_edicao" : "produto_item"} flex gap-2">
-                <select class="${isEdicao ? "prod_id_edicao" : "produto_id"} flex-1 bg-[#020617] border border-gray-800 rounded-lg py-2 px-3 text-sm text-gray-300 outline-none focus:border-cyan-500"></select>
-                <input type="number" class="${isEdicao ? "prod_qtd_edicao" : "quantidade"} w-20 bg-[#020617] border border-gray-800 rounded-lg py-2 px-3 text-sm text-gray-300" min="1" value="1">
-                <button type="button" class="${isEdicao ? "remover_prod_edicao" : "remover_produto"} bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white px-3 rounded-lg font-bold transition-all">X</button>
-            </div>`;
+        const html = `
+        <div class="${itemClass} flex gap-2">
+            <select class="${selectClass} flex-1 bg-[#020617] border border-gray-800 rounded-lg py-2 px-3 text-sm text-gray-300 outline-none focus:border-cyan-500"></select>
+            <input type="number" class="${inputClass} w-20 bg-[#020617] border border-gray-800 rounded-lg py-2 px-3 text-sm text-gray-300" min="1" value="1">
+            <button type="button" class="${btnClass} bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white px-3 rounded-lg font-bold transition-all">X</button>
+        </div>`;
 
-            const $item = $(html);
-            $(container).append($item);
-            popularSelectProduto($item.find("select"));
-        },
-    );
+        const $item = $(html);
+        $(container).append($item);
+        popularSelectProduto($item.find("select"));
+    });
 
-    $(document).on(
-        "click",
-        ".remover_produto, .remover_prod_edicao",
-        function () {
-            const isEdicao = $(this).hasClass("remover_prod_edicao");
-            const classe = isEdicao ? ".produto_item_edicao" : ".produto_item";
+    $(document).on("click", ".remover_produto, .remover_prod_edicao", function () {
+        const isEdicao = $(this).hasClass("remover_prod_edicao");
+        const classePai = isEdicao ? ".produto_item_edicao" : ".produto_item";
 
-            if ($(classe).length > 1) {
-                $(this).closest(classe).remove();
-                calcularTotal();
-            }
-        },
-    );
-
-    $(document).on(
-        "change",
-        ".produto_id, .prod_id_edicao, .quantidade, .prod_qtd_edicao",
-        function () {
+        if ($(classePai).parent().find(classePai).length > 1) {
+            $(this).closest(classePai).remove();
             calcularTotal();
-        },
-    );
+        }
+    });
 
-    $("#salvar_pedido").click(function () {
+    $(document).on("change", ".produto_id, .prod_id_edicao, .quantidade, .prod_qtd_edicao", function () {
+        calcularTotal();
+    });
+
+    $("#salvar_novo_pedido").click(function () {
         salvarPedido();
     });
 
@@ -85,21 +75,12 @@ $(document).ready(function () {
 
     $("#btn_excluir_pedido").click(function () {
         const id = $("#edit_pedido_id").val();
-        if (
-            confirm(
-                "Tem certeza que deseja excluir este pedido permanentemente?",
-            )
-        ) {
+        if (confirm("Tem certeza que deseja excluir este pedido permanentemente?")) {
             excluirPedido(id);
         }
     });
 });
 
-/**
- * Carrega a lista de pedidos do servidor e renderiza a tabela.
- * * @param {string} filtro - Status do pedido para filtrar (ex: 'pendente', 'entregue').
- * @param {string} busca - Termo de busca (nome do cliente ou número do pedido).
- */
 function carregarPedidos(filtro = "", busca = "") {
     $.ajax({
         type: "GET",
@@ -110,30 +91,14 @@ function carregarPedidos(filtro = "", busca = "") {
             busca: busca,
         },
         beforeSend: function () {
-            const tbody = $("#pedidostabletbody");
-            tbody.empty();
-            tbody.append(`
-                <tr>
-                    <td colspan="5" class="text-center py-10 text-cyan-500 animate-pulse font-bold">
-                        Carregando pedidos...
-                    </td>
-                </tr>
-            `);
+            $("#pedidostabletbody").html('<tr><td colspan="5" class="text-center py-10 text-cyan-500 animate-pulse font-bold">Carregando pedidos...</td></tr>');
         },
         success: (res) => {
-            const tbody = $("#pedidostabletbody");
-            tbody.empty();
-
+            const tbody = $("#pedidostabletbody").empty();
             const pedidos = res.pedidos || [];
 
             if (pedidos.length === 0) {
-                tbody.append(`
-                    <tr>
-                        <td colspan="5" class="text-center py-10 text-gray-500">
-                            Nenhum pedido encontrado.
-                        </td>
-                    </tr>
-                `);
+                tbody.append('<tr><td colspan="5" class="text-center py-10 text-gray-500">Nenhum pedido encontrado.</td></tr>');
                 return;
             }
 
@@ -145,54 +110,30 @@ function carregarPedidos(filtro = "", busca = "") {
                 cancelado: "bg-red-500/20 text-red-400",
             };
 
-            pedidos.forEach((pedido) => {
-                const cor =
-                    status_classes[pedido.status] ||
-                    "bg-gray-500/20 text-gray-400";
+            pedidos.forEach((p) => {
+                const cor = status_classes[p.status] || "bg-gray-500/20 text-gray-400";
                 tbody.append(`
                     <tr class="text-gray-300 text-sm border-b border-gray-800 hover:bg-[#0f172a]/50">
-                        <td class="px-6 py-4 font-semibold">${pedido.numero_pedido}</td>
-                        <td class="px-6 py-4">Cliente #${pedido.cliente_id}</td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 rounded-full text-xs font-bold ${cor}">
-                                ${pedido.status}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 font-semibold">R$ ${parseFloat(pedido.total).toFixed(2)}</td>
+                        <td class="px-6 py-4 font-semibold">${p.numero_pedido}</td>
+                        <td class="px-6 py-4">Cliente #${p.cliente_id}</td>
+                        <td class="px-6 py-4"><span class="px-3 py-1 rounded-full text-xs font-bold ${cor}">${p.status}</span></td>
+                        <td class="px-6 py-4 font-semibold">R$ ${parseFloat(p.total).toFixed(2)}</td>
                         <td class="px-6 py-4 text-right">
-                            <a href="javascript:void(0)" data-id="${pedido.id}" class="btn-ver-detalhes text-cyan-400 hover:text-cyan-300 font-semibold">Editar</a>
+                            <a href="javascript:void(0)" data-id="${p.id}" class="btn-ver-detalhes text-cyan-400 hover:text-cyan-300 font-semibold">Editar</a>
                         </td>
                     </tr>
                 `);
             });
-        },
-        error: () => {
-            const tbody = $("#pedidostabletbody");
-            tbody.empty();
-            tbody.append(`
-                <tr>
-                    <td colspan="5" class="text-center py-10 text-red-500">
-                        Erro ao carregar pedidos. Tente novamente.
-                    </td>
-                </tr>
-            `);
-        },
+        }
     });
 }
 
-/**
- * Busca os dados de um pedido específico e abre o modal para edição.
- * * @param {number|string} id - O ID do pedido a ser editado.
- */
 function abrirModalEdicao(id) {
     const $modal = $("#modal_detalhes_pedido");
     const $body = $modal.find(".modal-body");
 
     $modal.removeClass("hidden").css("display", "flex");
-    $("body").addClass("overflow-hidden");
-    $body.html(
-        '<div class="text-center py-10 text-cyan-500 animate-pulse font-bold">Carregando dados do pedido...</div>',
-    );
+    $body.html('<div class="text-center py-10 text-cyan-500 animate-pulse font-bold">Carregando...</div>');
 
     $.ajax({
         type: "GET",
@@ -204,35 +145,29 @@ function abrirModalEdicao(id) {
                 <input type="hidden" id="edit_pedido_id" value="${p.id}">
                 <div class="grid grid-cols-1 gap-5">
                     <div>
-                        <label class="block text-xs font-bold uppercase text-gray-500 mb-1 tracking-wider">Cliente</label>
-                        <select id="edit_cliente_id" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-gray-300 outline-none focus:border-cyan-500"></select>
+                        <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Cliente</label>
+                        <select id="edit_cliente_id" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-gray-300"></select>
                     </div>
 
                     <div class="bg-[#020617]/50 p-4 rounded-xl border border-gray-800/50">
-                        <label class="block text-xs font-bold uppercase text-gray-500 mb-3 tracking-wider">Produtos</label>
+                        <label class="block text-xs font-bold uppercase text-gray-500 mb-3">Produtos</label>
                         <div id="produtos_edicao_container" class="space-y-3">
-                            ${p.produtos
-                                .map(
-                                    (prod) => `
+                            ${p.produtos.map(prod => `
                                 <div class="produto_item_edicao flex gap-2">
                                     <select class="prod_id_edicao flex-1 bg-[#020617] border border-gray-800 rounded-lg py-2 px-3 text-sm text-white">
                                         <option value="${prod.id}" data-preco="${prod.preco}" selected>${prod.nome}</option>
                                     </select>
                                     <input type="number" class="prod_qtd_edicao w-20 bg-[#020617] border border-gray-800 rounded-lg py-2 px-3 text-sm text-white" min="1" value="${prod.quantidade}">
                                     <button type="button" class="remover_prod_edicao bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white px-3 rounded-lg font-bold">X</button>
-                                </div>`,
-                                )
-                                .join("")}
+                                </div>`).join("")}
                         </div>
-                        <button type="button" id="add_produto_edicao" class="mt-4 text-xs font-bold text-cyan-400 hover:text-cyan-300 flex items-center gap-1">
-                            <span class="text-lg">+</span> Adicionar outro produto
-                        </button>
+                        <button type="button" id="add_produto_edicao" class="mt-4 text-xs font-bold text-cyan-400 hover:text-cyan-300">+ Adicionar outro produto</button>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-bold uppercase text-gray-500 mb-1 tracking-wider">Status</label>
-                            <select id="edit_status" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500">
+                            <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Status</label>
+                            <select id="edit_status" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white">
                                 <option value="pendente" ${p.status == "pendente" ? "selected" : ""}>Pendente</option>
                                 <option value="processando" ${p.status == "processando" ? "selected" : ""}>Processando</option>
                                 <option value="enviado" ${p.status == "enviado" ? "selected" : ""}>Enviado</option>
@@ -241,8 +176,8 @@ function abrirModalEdicao(id) {
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold uppercase text-gray-500 mb-1 tracking-wider">Pagamento</label>
-                            <select id="edit_metodo" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500">
+                            <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Pagamento</label>
+                            <select id="edit_metodo" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white">
                                 <option value="pix" ${p.metodo_pagamento == "pix" ? "selected" : ""}>PIX</option>
                                 <option value="cartao_credito" ${p.metodo_pagamento == "cartao_credito" ? "selected" : ""}>Cartão de Crédito</option>
                                 <option value="dinheiro" ${p.metodo_pagamento == "dinheiro" ? "selected" : ""}>Dinheiro</option>
@@ -251,28 +186,23 @@ function abrirModalEdicao(id) {
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold uppercase text-gray-500 mb-1 tracking-wider">Observações</label>
-                        <textarea id="edit_obs" rows="2" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500">${p.observacoes || ""}</textarea>
+                        <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Observações</label>
+                        <textarea id="edit_obs" rows="2" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white">${p.observacoes || ""}</textarea>
                     </div>
 
                     <div class="bg-cyan-500/5 p-4 rounded-xl border border-cyan-500/20 flex justify-between items-center">
-                        <span class="text-cyan-400 text-sm font-bold uppercase tracking-widest">Total do Pedido</span>
-                        <span id="total_edicao" class="text-white text-xl font-black font-mono tracking-tighter">R$ ${parseFloat(p.total).toFixed(2)}</span>
+                        <span class="text-cyan-400 text-sm font-bold uppercase">Total do Pedido</span>
+                        <span id="total_edicao" class="text-white text-xl font-black font-mono">R$ ${parseFloat(p.total).toFixed(2)}</span>
                     </div>
                 </div>`;
 
             $body.html(html);
             popular_select_clientes("edit_cliente_id");
-        },
+            $(".prod_id_edicao").each(function() { popularSelectProduto($(this)); });
+        }
     });
 }
 
-
-
-/**
- * Preenche um elemento select com a lista de produtos disponíveis.
- * * @param {jQuery} select - O elemento jQuery do tipo <select> que será preenchido.
- */
 function popularSelectProduto(select) {
     const originalValue = select.val();
     $.ajax({
@@ -290,10 +220,6 @@ function popularSelectProduto(select) {
     });
 }
 
-/**
- * Calcula o valor total do pedido com base nos produtos e quantidades selecionados.
- * Funciona dinamicamente tanto no modal de Novo Pedido quanto no de Edição.
- */
 function calcularTotal() {
     let total = 0;
     const isEdicao = $("#modal_detalhes_pedido").is(":visible");
@@ -302,10 +228,7 @@ function calcularTotal() {
     const inputQtd = isEdicao ? ".prod_qtd_edicao" : ".quantidade";
 
     $(container).each(function () {
-        const preco =
-            parseFloat(
-                $(this).find(`${select} option:selected`).data("preco"),
-            ) || 0;
+        const preco = parseFloat($(this).find(`${select} option:selected`).data("preco")) || 0;
         const qtd = parseInt($(this).find(inputQtd).val()) || 0;
         total += preco * qtd;
     });
@@ -317,12 +240,9 @@ function calcularTotal() {
     }
 }
 
-/**
- * Coleta os dados do formulário de Novo Pedido e envia para o backend.
- */
 function salvarPedido() {
-    const btn = $("#salvar_pedido");
-    const id_cliente = $("#id_cliente_select").val();
+    const btn = $("#salvar_novo_pedido");
+    const id_cliente = $("#id_novo_produto_cliente_select").val();
     let produtos = [];
 
     $(".produto_item").each(function () {
@@ -332,9 +252,7 @@ function salvarPedido() {
     });
 
     if (!id_cliente || produtos.length === 0) {
-        $("#erro_novo_pedido").text(
-            "Selecione um cliente e ao menos um produto.",
-        );
+        $("#erro_novo_pedido").text("Selecione um cliente e ao menos um produto.");
         return;
     }
 
@@ -351,21 +269,13 @@ function salvarPedido() {
             lista_produtos: produtos,
         },
         success: function () {
-            $("#modal_novo_pedido").addClass("hidden").css("display", "none");
+            $(".close-modal-btn").first().click();
             carregarPedidos();
-            mostrarFeedback(
-                "sucesso",
-                "Criado!",
-                "Pedido registrado com sucesso.",
-            );
         },
         complete: () => btn.prop("disabled", false).text("Salvar Pedido"),
     });
 }
 
-/**
- * Coleta os dados alterados no modal de Edição e envia para o backend.
- */
 function atualizarPedido() {
     const id = $("#edit_pedido_id").val();
     const btn = $("#btn_atualizar_pedido");
@@ -391,24 +301,13 @@ function atualizarPedido() {
             valor_total: $("#total_edicao").text().replace("R$ ", ""),
         },
         success: function () {
-            $("#modal_detalhes_pedido")
-                .addClass("hidden")
-                .css("display", "none");
+            $("#modal_detalhes_pedido").addClass("hidden").css("display", "none");
             carregarPedidos();
-            mostrarFeedback(
-                "sucesso",
-                "Atualizado!",
-                "Pedido alterado com sucesso.",
-            );
         },
         complete: () => btn.prop("disabled", false).text("Salvar Alterações"),
     });
 }
 
-/**
- * Solicita ao backend a exclusão permanente de um pedido.
- * * @param {number|string} id - ID do pedido a ser excluído.
- */
 function excluirPedido(id) {
     $.ajax({
         type: "DELETE",
@@ -418,24 +317,14 @@ function excluirPedido(id) {
             id_usuario: $("#id_usuario_menu").val(),
         },
         success: function () {
-            $("#modal_detalhes_pedido")
-                .addClass("hidden")
-                .css("display", "none");
+            $("#modal_detalhes_pedido").addClass("hidden").css("display", "none");
             carregarPedidos();
-            mostrarFeedback(
-                "sucesso",
-                "Excluído!",
-                "O pedido foi removido do sistema.",
-            );
         },
     });
 }
 
-/**
- * Limpa todos os campos do modal de Novo Pedido e reseta a lista de produtos.
- */
 function limparFormularioPedido() {
-    $("#id_cliente_select, #total, #observacoes").val("");
+    $("#id_novo_produto_cliente_select, #total, #observacoes").val("");
     $("#produtos_container").html(`
         <div class="produto_item flex gap-2">
             <select class="produto_id flex-1 bg-[#020617] border border-gray-800 rounded-lg py-2 px-3 text-sm text-gray-300 outline-none"></select>
@@ -445,21 +334,19 @@ function limparFormularioPedido() {
     $("#erro_novo_pedido").text("");
 }
 
-/**
- * Busca a lista de clientes do backend e preenche o select principal.
- */
 function getDadosClientes() {
+    popular_select_clientes("id_novo_produto_cliente_select");
+}
+
+function popular_select_clientes(elementId) {
     $.ajax({
         type: "GET",
         url: "/clientes/get-clientes",
         data: { id_usuario: $("#id_usuario_menu").val() },
         success: function (res) {
             let options = '<option value="">Selecione um cliente</option>';
-            (res.clientes || []).forEach(
-                (c) =>
-                    (options += `<option value="${c.id}">${c.nome}</option>`),
-            );
-            $("#id_cliente_select").html(options);
+            (res.clientes || []).forEach(c => options += `<option value="${c.id}">${c.nome}</option>`);
+            $("#" + elementId).html(options);
         },
     });
 }

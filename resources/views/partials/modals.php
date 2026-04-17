@@ -1,241 +1,116 @@
 <div id="modal_novo_pedido" class="fixed inset-0 z-[100] hidden flex-col items-center justify-center p-4">
     <div class="fixed inset-0 bg-black/60 backdrop-blur-sm close-modal-trigger"></div>
-    <div class="relative bg-[#0f172a] border border-gray-800 rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden transform transition-all">
-        <div class="px-6 py-4 border-b border-gray-800 flex justify-between items-center bg-[#0f172a]">
+
+    <div class="relative bg-[#0f172a] border border-gray-800 rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden">
+
+        <div class="px-6 py-4 border-b border-gray-800 flex justify-between items-center">
             <h3 class="text-xl font-bold text-white">Novo Pedido</h3>
-            <button type="button" class="text-gray-400 hover:text-white transition close-modal-btn text-2xl">&times;</button>
+            <button type="button" class="close-modal-btn text-gray-400 hover:text-white text-2xl">&times;</button>
         </div>
-        <div class="p-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
-            <div class="grid grid-cols-1 gap-4">
+
+        <div class="p-6 max-h-[70vh] overflow-y-auto">
+
+            <div class="grid gap-4">
+
                 <div>
-                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1 tracking-wider">Cliente</label>
-                    <select id="id_novo_produto_cliente_select" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-gray-300 focus:outline-none focus:border-cyan-500 transition"></select>
+                    <label class="text-xs font-bold text-gray-500">Cliente</label>
+                    <select id="id_novo_produto_cliente_select" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-gray-300"></select>
                 </div>
-                <div class="bg-[#020617]/50 p-4 rounded-xl border border-gray-800/50">
-                    <label class="block text-xs font-bold uppercase text-gray-500 mb-3 tracking-wider">Produtos</label>
+
+                <div class="bg-[#020617]/50 p-4 rounded-xl border border-gray-800">
+                    <label class="text-xs font-bold text-gray-500 mb-3 block">Produtos</label>
+
                     <div id="produtos_container" class="space-y-3">
-                    <div class="produto_item flex gap-2">
-                        <select id="id_novo_produto_select" class="produto_id flex-1 bg-[#020617] border border-gray-800 rounded-lg py-2 px-3 text-sm text-gray-300 focus:border-cyan-500 outline-none">
-                            <option value="">Selecione um produto...</option>
-                            </select>
-                        <input type="number" class="quantidade w-20 bg-[#020617] border border-gray-800 rounded-lg py-2 px-3 text-sm text-gray-300" placeholder="Qtd" min="1" value="1">
-                        <button type="button" class="remover_produto bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white px-3 rounded-lg transition-all font-bold">X</button>
+
+                        <div class="produto_item flex gap-2">
+                            <select class="produto_id flex-1 bg-[#020617] border border-gray-800 rounded-lg py-2 px-3 text-sm text-gray-300"></select>
+
+                            <input type="number" class="quantidade w-20 bg-[#020617] border border-gray-800 rounded-lg px-3 text-sm text-gray-300" value="1">
+
+                            <button type="button" class="remover_produto bg-red-500/10 text-red-500 px-3 rounded-lg">X</button>
+                        </div>
+
                     </div>
-                </div>
-                    <button type="button" id="adicionar_produto" class="mt-4 text-xs font-bold text-cyan-400 hover:text-cyan-300 flex items-center gap-1 transition">
-                        <span class="text-lg">+</span> Adicionar outro produto
+
+                    <button type="button" id="adicionar_produto" class="mt-4 text-xs text-cyan-400">
+                        + Adicionar produto
                     </button>
                 </div>
+
                 <div class="grid grid-cols-2 gap-4">
+
                     <div>
-                        <label class="block text-xs font-bold uppercase text-gray-500 mb-1 tracking-wider">Total (R$)</label>
-                        <input type="number" id="total" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white focus:border-cyan-500 outline-none">
+                        <label class="text-xs font-bold text-gray-500">Total</label>
+                        <input type="number" id="total" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white">
                     </div>
+
                     <div>
-                        <label class="block text-xs font-bold uppercase text-gray-500 mb-1 tracking-wider">Pagamento</label>
-                        <select id="metodo_pagamento" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-gray-300 outline-none focus:border-cyan-500">
+                        <label class="text-xs font-bold text-gray-500">Pagamento</label>
+                        <select id="metodo_pagamento" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-gray-300">
                             <option value="pix">PIX</option>
-                            <option value="cartao_credito">Cartão de Crédito</option>
-                            <option value="cartao_debito">Cartão de Débito</option>
+                            <option value="cartao_credito">Cartão Crédito</option>
+                            <option value="cartao_debito">Cartão Débito</option>
                             <option value="dinheiro">Dinheiro</option>
                         </select>
                     </div>
+
                 </div>
+
                 <div>
-                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1 tracking-wider">Observações</label>
-                    <textarea id="observacoes" rows="2" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-gray-300 outline-none focus:border-cyan-500"></textarea>
+                    <label class="text-xs font-bold text-gray-500">Observações</label>
+                    <textarea id="observacoes" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-gray-300"></textarea>
                 </div>
-                <div id="erro_novo_pedido" class="text-red-400 text-sm italic"></div>
+
+                <div id="erro_novo_pedido" class="text-red-400 text-sm"></div>
+
             </div>
         </div>
-        <div class="px-6 py-4 bg-[#0f172a] border-t border-gray-800 flex justify-end gap-3">
-            <button type="button" class="px-6 py-2.5 text-gray-400 hover:text-white font-bold transition close-modal-btn">Cancelar</button>
-            <button type="button" id="salvar_novo_pedido" class="bg-[#00e5ff] hover:bg-cyan-400 text-black px-8 py-2.5 rounded-xl font-bold transition shadow-[0_0_20px_rgba(0,229,255,0.3)]">
+
+        <div class="px-6 py-4 border-t border-gray-800 flex justify-end gap-3">
+            <button class="close-modal-btn text-gray-400">Cancelar</button>
+            <button id="salvar_novo_pedido" class="bg-cyan-400 text-black px-6 py-2 rounded-xl font-bold">
                 Salvar Pedido
             </button>
         </div>
+
     </div>
 </div>
 
 <div id="modal_detalhes_pedido" class="fixed inset-0 z-[100] hidden flex-col items-center justify-center p-4">
+
     <div class="fixed inset-0 bg-black/60 backdrop-blur-sm close-modal-trigger"></div>
-    <div class="relative bg-[#0f172a] border border-gray-800 rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden transform transition-all">
-        <div class="px-6 py-4 border-b border-gray-800 flex justify-between items-center bg-[#0f172a]">
+
+    <div class="relative bg-[#0f172a] border border-gray-800 rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden">
+
+        <div class="px-6 py-4 border-b border-gray-800 flex justify-between items-center">
             <h3 class="text-xl font-bold text-white">Editar Pedido</h3>
-            <button type="button" class="text-gray-400 hover:text-white transition close-modal-btn text-2xl">&times;</button>
+            <button class="close-modal-btn text-gray-400 text-2xl">&times;</button>
         </div>
-        <div class="p-6 max-h-[70vh] overflow-y-auto custom-scrollbar modal-body"></div>
-        <div class="px-6 py-4 bg-[#0f172a] border-t border-gray-800 flex justify-between gap-3">
-            <button type="button" id="btn_excluir_pedido" class="px-4 py-2.5 text-red-500 hover:bg-red-500/10 font-bold transition rounded-xl border border-red-500/20">
-                Excluir Pedido
-            </button>
-            <div class="flex gap-3">
-                <button type="button" class="px-6 py-2.5 text-gray-400 hover:text-white font-bold transition close-modal-btn">Cancelar</button>
-                <button type="button" id="btn_atualizar_pedido" class="bg-[#00e5ff] hover:bg-cyan-400 text-black px-8 py-2.5 rounded-xl font-bold transition shadow-[0_0_20px_rgba(0,229,255,0.3)]">
-                    Salvar Alterações
-                </button>
+
+        <div class="p-6 max-h-[70vh] overflow-y-auto modal-body">
+
+            <div class="mb-4">
+                <label class="text-xs font-bold text-gray-500">Cliente</label>
+                <select id="edit_cliente_id" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-gray-300"></select>
             </div>
+
         </div>
-    </div>
-</div>
 
-<div id="modal_novo_produto" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity">
-    <div class="bg-[#020617] w-full max-w-3xl max-h-[90vh] rounded-2xl border border-gray-800 shadow-2xl flex flex-col relative">
+        <div class="px-6 py-4 border-t border-gray-800 flex justify-between">
 
-        <header class="p-6 border-b border-gray-800 flex justify-between items-center bg-[#0f172a] rounded-t-2xl">
-            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
-                <span class="text-cyan-400">+</span> Cadastrar Produto
-            </h2>
-            <button type="button" class="close_modal_btn text-gray-500 hover:text-white text-3xl leading-none transition">&times;</button>
-        </header>
-
-        <form id="form_novo_produto" class="bg-[#0f172a] p-6 overflow-y-auto space-y-5">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-
-                <div class="md:col-span-2">
-                    <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Nome do Produto *</label>
-                    <input type="text" id="nome_produto" placeholder="Ex: Cerveja Artesanal" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
-                </div>
-
-                <div class="md:col-span-2">
-                    <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Descrição</label>
-                    <textarea id="descricao_produto" rows="2" placeholder="Breve descrição do item..." class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition"></textarea>
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Preço de Venda (R$)</label>
-                    <input type="number" step="0.01" id="preco_produto" placeholder="0,00" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Custo (R$)</label>
-                    <input type="number" step="0.01" id="custo_produto" placeholder="0,00" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Categoria</label>
-                    <select id="categoria_produto" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
-                        <option value="">Sem Categoria</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Status</label>
-                    <select id="status_produto" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500 transition">
-                        <option value="ativo">Ativo</option>
-                        <option value="inativo">Inativo</option>
-                    </select>
-                </div>
-
-                <div class="md:col-span-2 grid grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Atual</label>
-                        <input type="number" id="estoque_produto" value="0" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Mínimo</label>
-                        <input type="number" id="estoque_minimo_produto" value="0" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Máximo</label>
-                        <input type="number" id="estoque_maximo_produto" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none">
-                    </div>
-                </div>
-
-                <div class="md:col-span-2">
-                    <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">URL da Imagem</label>
-                    <input type="text" id="imagem_url_produto" placeholder="https://..." class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none">
-                </div>
-            </div>
-        </form>
-
-        <footer class="p-6 border-t border-gray-800 bg-[#0f172a] flex justify-end gap-3 items-center">
-            <span id="erro_novo_produto" class="text-red-400 text-xs font-bold mr-auto"></span>
-            <button type="button" class="close_modal_btn px-5 py-2.5 rounded-lg text-gray-400 hover:text-white transition">Cancelar</button>
-            <button type="button" id="salvar_produto" class="bg-[#00e5ff] hover:bg-[#00cce4] px-6 py-2.5 rounded-lg font-bold text-[#020617] transition">Salvar Produto</button>
-        </footer>
-    </div>
-</div>
-
-<div id="modal_detalhes_produto" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity">
-    <div class="bg-[#020617] w-full max-w-3xl max-h-[90vh] rounded-2xl border border-gray-800 shadow-2xl flex flex-col relative">
-
-        <header class="p-6 border-b border-gray-800 flex justify-between items-center bg-[#0f172a] rounded-t-2xl">
-            <h2 class="text-2xl font-bold text-white">Editar Produto</h2>
-            <button type="button" class="close_modal_btn text-gray-500 hover:text-white text-3xl leading-none transition">&times;</button>
-        </header>
-
-        <form id="form_editar_produto" class="bg-[#0f172a] p-6 overflow-y-auto space-y-5">
-            <input type="hidden" id="edit_produto_id">
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div class="md:col-span-2">
-                    <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Nome do Produto</label>
-                    <input type="text" id="edit_nome_produto" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500">
-                </div>
-
-                <div class="md:col-span-2">
-                    <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Descrição</label>
-                    <textarea id="edit_descricao_produto" rows="2" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500"></textarea>
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Preço de Venda</label>
-                    <input type="number" step="0.01" id="edit_preco_produto" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500">
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Custo</label>
-                    <input type="number" step="0.01" id="edit_custo_produto" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500">
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Categoria</label>
-                    <select id="edit_categoria_produto" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500"></select>
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Status</label>
-                    <select id="edit_status_produto" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none focus:border-cyan-500">
-                        <option value="ativo">Ativo</option>
-                        <option value="inativo">Inativo</option>
-                    </select>
-                </div>
-
-                <div class="md:col-span-2 grid grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Estoque</label>
-                        <input type="number" id="edit_estoque_produto" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Mín.</label>
-                        <input type="number" id="edit_estoque_minimo_produto" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">Máx.</label>
-                        <input type="number" id="edit_estoque_maximo_produto" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none">
-                    </div>
-                </div>
-
-                <div class="md:col-span-2">
-                    <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-widest">URL da Imagem</label>
-                    <input type="text" id="edit_imagem_url_produto" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white outline-none">
-                </div>
-            </div>
-        </form>
-
-        <footer class="p-6 border-t border-gray-800 bg-[#0f172a] flex justify-between items-center">
-            <button type="button" id="btn_excluir_produto" class="text-red-500 hover:bg-red-500/10 px-4 py-2 rounded-lg font-bold transition">
-                Excluir Produto
+            <button id="btn_excluir_pedido" class="text-red-500">
+                Excluir
             </button>
 
             <div class="flex gap-3">
-                <button type="button" class="close_modal_btn text-gray-400 hover:text-white px-4 py-2">Cancelar</button>
-                <button type="button" id="btn_atualizar_produto" class="bg-[#00e5ff] hover:bg-[#00cce4] px-6 py-2.5 rounded-lg font-bold text-[#020617] transition">
-                    Salvar Alterações
+                <button class="close-modal-btn text-gray-400">Cancelar</button>
+                <button id="btn_atualizar_pedido" class="bg-cyan-400 text-black px-6 py-2 rounded-xl font-bold">
+                    Salvar
                 </button>
             </div>
-        </footer>
+
+        </div>
+
     </div>
 </div>
 
@@ -251,6 +126,7 @@
         </div>
     </div>
 </div>
+
 <div id="modal_novo_cliente" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
     <div class="bg-[#0f172a] border border-gray-800 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden">
         <div class="p-6 border-b border-gray-800 flex justify-between items-center">
