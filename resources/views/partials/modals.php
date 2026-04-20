@@ -115,14 +115,19 @@
 </div>
 
 <div id="modal_feedback" class="fixed inset-0 z-[110] hidden flex-col items-center justify-center bg-black/60 backdrop-blur-sm">
-    <div class="bg-[#020617] border border-gray-800 rounded-2xl w-full max-w-md p-6 shadow-xl animate-fade-in">
-        <div class="flex justify-center mb-4">
-            <div id="modal_feedback_icon" class="w-14 h-14 flex items-center justify-center rounded-full text-2xl font-bold"></div>
+    <div class="bg-[#020617] border border-gray-800 rounded-2xl w-full max-w-md p-8 shadow-2xl animate-fade-in">
+        <div class="flex justify-center mb-6">
+            <div id="modal_feedback_icon" class="w-16 h-16 flex items-center justify-center rounded-full text-3xl font-bold">
+                </div>
         </div>
-        <h2 id="modal_feedback_titulo" class="text-center text-lg font-semibold text-white mb-2"></h2>
-        <p id="modal_feedback_msg" class="text-center text-gray-400 text-sm mb-6"></p>
+        
+        <h2 id="modal_feedback_titulo" class="text-center text-xl font-bold text-white mb-2"></h2>
+        <p id="modal_feedback_msg" class="text-center text-gray-400 text-sm mb-8 leading-relaxed"></p>
+        
         <div class="flex justify-center">
-            <button id="modal_feedback_btn" class="px-5 py-2 rounded-lg font-semibold transition-all close-modal-btn"></button>
+            <button class="close-modal-btn w-full bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-xl transition-all">
+                Entendido
+            </button>
         </div>
     </div>
 </div>
@@ -160,7 +165,64 @@
     </div>
 </div>
 
-<div id="modal_detalhes_cliente" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+<div id="modal_novo_produto" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+        <div class="fixed inset-0 bg-black/60 backdrop-blur-sm close-modal-trigger"></div>
+        <div class="relative bg-[#0f172a] border border-gray-800 rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-800 flex justify-between items-center">
+                <h3 id="modal_produto_titulo" class="text-xl font-bold text-white">Novo Produto</h3>
+                <button class="close-modal-btn text-gray-400 text-2xl">&times;</button>
+            </div>
+            <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+                <input type="hidden" id="edit_produto_id">
+                <div>
+                    <label class="text-xs text-gray-400">Nome</label>
+                    <input id="nome_produto" type="text" class="w-full bg-[#020617] border border-gray-800 rounded-lg p-3 text-white">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400">Descrição</label>
+                    <textarea id="descricao_produto" class="w-full bg-[#020617] border border-gray-800 rounded-lg p-3 text-gray-300"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-xs text-gray-400">Preço</label>
+                        <input id="preco_produto" type="number" step="0.01" class="w-full bg-[#020617] border border-gray-800 rounded-lg p-3 text-white">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400">Custo</label>
+                        <input id="custo_produto" type="number" step="0.01" class="w-full bg-[#020617] border border-gray-800 rounded-lg p-3 text-white">
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-4">
+                    <div>
+                        <label class="text-xs text-gray-400">Estoque</label>
+                        <input id="estoque_produto" type="number" class="w-full bg-[#020617] border border-gray-800 rounded-lg p-3 text-white">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400">Mínimo</label>
+                        <input id="estoque_minimo_produto" type="number" value="0" class="w-full bg-[#020617] border border-gray-800 rounded-lg p-3 text-white">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400">Status</label>
+                        <select id="status_produto" class="w-full bg-[#020617] border border-gray-800 rounded-lg p-3 text-gray-300">
+                            <option value="ativo">Ativo</option>
+                            <option value="inativo">Inativo</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400">Categoria</label>
+                    <select id="categoria_produto" class="w-full bg-[#020617] border border-gray-800 rounded-lg p-3 text-gray-300"></select>
+                </div>
+            </div>
+            <div class="px-6 py-4 border-t border-gray-800 flex justify-end gap-3">
+                <button id="btn_excluir_produto" class="text-red-500 mr-auto hidden">Excluir</button>
+                <button class="close-modal-btn text-gray-400">Cancelar</button>
+                <button id="salvar_produto_final" class="bg-cyan-400 text-black px-6 py-2 rounded-lg font-bold">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal_detalhes_cliente" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
     <div class="bg-[#0f172a] border border-gray-800 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden">
         <div class="p-6 border-b border-gray-800 flex justify-between items-center">
             <h2 class="text-xl font-bold text-white">Editar Cliente</h2>
@@ -177,6 +239,7 @@
         </div>
     </div>
 </div>
+
 <style>
     @keyframes fadeIn {
         from {
@@ -193,4 +256,16 @@
     .animate-fade-in {
         animation: fadeIn 0.2s ease-out;
     }
+
+    .bg-card {
+    background-color: #0f172a;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
 </style>
