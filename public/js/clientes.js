@@ -1,9 +1,20 @@
 $(document).ready(function () {
     carregar_clientes();
 
+    $("#inputBusca").on("input", function () {
+        const busca = $(this).val();
+        const status = $("#filtroStatus").val();
+        carregar_clientes(busca, status);
+    });
+
+    $("#filtroStatus").on("change", function () {
+        const busca = $("#inputBusca").val(); 
+        const status = $(this).val();
+        carregar_clientes(busca, status);
+    });
+
     $(".btn-glow").on("click", function () {
         limpar_formulario_cliente();
-
         $("#modal_novo_cliente").removeClass("hidden").addClass("flex");
         $("body").addClass("overflow-hidden");
     });
@@ -33,18 +44,12 @@ $(document).ready(function () {
         }
     });
 
-    $("#inputBusca").on("input", function () {
-        carregar_clientes($(this).val());
-    });
-
     $("#salvar_cliente").click(function () {
         salvar_cliente();
     });
-
     $("#btn_atualizar_cliente").click(function () {
         atualizar_cliente();
     });
-
     $("#btn_excluir_cliente").click(function () {
         const id = $("#edit_cliente_id").val();
         if (
@@ -58,21 +63,24 @@ $(document).ready(function () {
     });
 });
 
-function carregar_clientes(busca = "") {
+function carregar_clientes(busca = "", status = "") {
     const grid = $("#gridClientes");
     const contador = $("#contador-clientes");
 
     $.ajax({
         type: "GET",
         url: "/clientes/get-clientes",
-        data: { busca: busca },
+        data: {
+            busca: busca,
+            status: status,
+        },
         beforeSend: function () {
             grid.addClass("opacity-50");
         },
         success: (res) => {
             grid.removeClass("opacity-50").empty();
             const clientes = res.clientes || [];
-            contador.text(`${clientes.length} cliente(s) cadastrado(s)`);
+            contador.text(`${clientes.length} cliente(s) encontrado(s)`);
 
             if (clientes.length === 0) {
                 grid.append(
