@@ -148,6 +148,7 @@ function excluir_produto_api(id) {
 
 function coletar_dados() {
     return {
+        id_usuario: $("#id_usuario_menu").val(),
         nome: $("#nome_produto").val(),
         descricao: $("#descricao_produto").val(),
         preco: $("#preco_produto").val(),
