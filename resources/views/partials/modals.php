@@ -76,7 +76,8 @@
     </div>
 </div>
 
-<div id="modal_detalhes_pedido" class="fixed inset-0 z-[100] hidden flex-col items-center justify-center p-4">
+<div id="modal_detalhes_pedido"
+     class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
 
     <div class="fixed inset-0 bg-black/60 backdrop-blur-sm close-modal-trigger"></div>
 
@@ -87,14 +88,7 @@
             <button class="close-modal-btn text-gray-400 text-2xl">&times;</button>
         </div>
 
-        <div class="p-6 max-h-[70vh] overflow-y-auto modal-body">
-
-            <div class="mb-4">
-                <label class="text-xs font-bold text-gray-500">Cliente</label>
-                <select id="edit_cliente_id" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-gray-300"></select>
-            </div>
-
-        </div>
+        <div class="p-6 max-h-[70vh] overflow-y-auto modal-body"></div>
 
         <div class="px-6 py-4 border-t border-gray-800 flex justify-between">
 

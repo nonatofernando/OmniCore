@@ -31,39 +31,57 @@ $(document).ready(function () {
         carregarPedidos($("#filtro_status").val(), $(this).val());
     });
 
-    $(document).on("click", "#adicionar_produto, #add_produto_edicao", function () {
-        const isEdicao = $(this).attr("id") === "add_produto_edicao";
-        const container = isEdicao ? "#produtos_edicao_container" : "#produtos_container";
-        const itemClass = isEdicao ? "produto_item_edicao" : "produto_item";
-        const selectClass = isEdicao ? "prod_id_edicao" : "produto_id";
-        const inputClass = isEdicao ? "prod_qtd_edicao" : "quantidade";
-        const btnClass = isEdicao ? "remover_prod_edicao" : "remover_produto";
+    $(document).on(
+        "click",
+        "#adicionar_produto, #add_produto_edicao",
+        function () {
+            const isEdicao = $(this).attr("id") === "add_produto_edicao";
+            const container = isEdicao
+                ? "#produtos_edicao_container"
+                : "#produtos_container";
+            const itemClass = isEdicao ? "produto_item_edicao" : "produto_item";
+            const selectClass = isEdicao ? "prod_id_edicao" : "produto_id";
+            const inputClass = isEdicao ? "prod_qtd_edicao" : "quantidade";
+            const btnClass = isEdicao
+                ? "remover_prod_edicao"
+                : "remover_produto";
 
-        const html = `
+            const html = `
         <div class="${itemClass} flex gap-2">
             <select class="${selectClass} flex-1 bg-[#020617] border border-gray-800 rounded-lg py-2 px-3 text-sm text-gray-300 outline-none focus:border-cyan-500"></select>
             <input type="number" class="${inputClass} w-20 bg-[#020617] border border-gray-800 rounded-lg py-2 px-3 text-sm text-gray-300" min="1" value="1">
             <button type="button" class="${btnClass} bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white px-3 rounded-lg font-bold transition-all">X</button>
         </div>`;
 
-        const $item = $(html);
-        $(container).append($item);
-        popularSelectProduto($item.find("select"));
-    });
+            const $item = $(html);
+            $(container).append($item);
+            popularSelectProduto($item.find("select"));
+        },
+    );
 
-    $(document).on("click", ".remover_produto, .remover_prod_edicao", function () {
-        const isEdicao = $(this).hasClass("remover_prod_edicao");
-        const classePai = isEdicao ? ".produto_item_edicao" : ".produto_item";
+    $(document).on(
+        "click",
+        ".remover_produto, .remover_prod_edicao",
+        function () {
+            const isEdicao = $(this).hasClass("remover_prod_edicao");
+            const classePai = isEdicao
+                ? ".produto_item_edicao"
+                : ".produto_item";
 
-        if ($(classePai).parent().find(classePai).length > 1) {
-            $(this).closest(classePai).remove();
+            if ($(classePai).parent().find(classePai).length > 1) {
+                $(this).closest(classePai).remove();
+                calcularTotal();
+            }
+        },
+    );
+
+    $(document).on(
+        "change",
+        ".produto_id, .prod_id_edicao, .quantidade, .prod_qtd_edicao",
+        function () {
             calcularTotal();
-        }
-    });
-
-    $(document).on("change", ".produto_id, .prod_id_edicao, .quantidade, .prod_qtd_edicao", function () {
-        calcularTotal();
-    });
+        },
+    );
 
     $("#salvar_novo_pedido").click(function () {
         salvarPedido();
@@ -75,7 +93,11 @@ $(document).ready(function () {
 
     $("#btn_excluir_pedido").click(function () {
         const id = $("#edit_pedido_id").val();
-        if (confirm("Tem certeza que deseja excluir este pedido permanentemente?")) {
+        if (
+            confirm(
+                "Tem certeza que deseja excluir este pedido permanentemente?",
+            )
+        ) {
             excluirPedido(id);
         }
     });
@@ -91,14 +113,18 @@ function carregarPedidos(filtro = "", busca = "") {
             busca: busca,
         },
         beforeSend: function () {
-            $("#pedidostabletbody").html('<tr><td colspan="5" class="text-center py-10 text-cyan-500 animate-pulse font-bold">Carregando pedidos...</td></tr>');
+            $("#pedidostabletbody").html(
+                '<tr><td colspan="5" class="text-center py-10 text-cyan-500 animate-pulse font-bold">Carregando pedidos...</td></tr>',
+            );
         },
         success: (res) => {
             const tbody = $("#pedidostabletbody").empty();
             const pedidos = res.pedidos || [];
 
             if (pedidos.length === 0) {
-                tbody.append('<tr><td colspan="5" class="text-center py-10 text-gray-500">Nenhum pedido encontrado.</td></tr>');
+                tbody.append(
+                    '<tr><td colspan="5" class="text-center py-10 text-gray-500">Nenhum pedido encontrado.</td></tr>',
+                );
                 return;
             }
 
@@ -111,7 +137,8 @@ function carregarPedidos(filtro = "", busca = "") {
             };
 
             pedidos.forEach((p) => {
-                const cor = status_classes[p.status] || "bg-gray-500/20 text-gray-400";
+                const cor =
+                    status_classes[p.status] || "bg-gray-500/20 text-gray-400";
                 tbody.append(`
                     <tr class="text-gray-300 text-sm border-b border-gray-800 hover:bg-[#0f172a]/50">
                         <td class="px-6 py-4 font-semibold">${p.numero_pedido}</td>
@@ -124,7 +151,7 @@ function carregarPedidos(filtro = "", busca = "") {
                     </tr>
                 `);
             });
-        }
+        },
     });
 }
 
@@ -133,7 +160,10 @@ function abrirModalEdicao(id) {
     const $body = $modal.find(".modal-body");
 
     $modal.removeClass("hidden").css("display", "flex");
-    $body.html('<div class="text-center py-10 text-cyan-500 animate-pulse font-bold">Carregando...</div>');
+
+    $body.html(
+        '<div class="text-center py-10 text-cyan-500 animate-pulse font-bold">Carregando...</div>',
+    );
 
     $.ajax({
         type: "GET",
@@ -141,27 +171,64 @@ function abrirModalEdicao(id) {
         data: { id_usuario: $("#id_usuario_menu").val() },
         success: function (res) {
             const p = res.pedido;
+            const cliente = p.cliente || null;
+
+            let clienteTexto = "";
+
+            if (cliente && typeof cliente === "object") {
+                clienteTexto = `${cliente.nome}`;
+            } else if (p.cliente_id) {
+                clienteTexto = `${p.cliente_id}`;
+            }
+
             let html = `
                 <input type="hidden" id="edit_pedido_id" value="${p.id}">
+
                 <div class="grid grid-cols-1 gap-5">
+
                     <div>
                         <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Cliente</label>
-                        <select id="edit_cliente_id" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-gray-300"></select>
+                        <input type="text"
+                               id="edit_cliente_id"
+                               disabled
+                               class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-gray-300"
+                               value="${clienteTexto}">
                     </div>
 
                     <div class="bg-[#020617]/50 p-4 rounded-xl border border-gray-800/50">
                         <label class="block text-xs font-bold uppercase text-gray-500 mb-3">Produtos</label>
+
                         <div id="produtos_edicao_container" class="space-y-3">
-                            ${p.produtos.map(prod => `
+                            ${p.produtos
+                                .map(
+                                    (prod) => `
                                 <div class="produto_item_edicao flex gap-2">
                                     <select class="prod_id_edicao flex-1 bg-[#020617] border border-gray-800 rounded-lg py-2 px-3 text-sm text-white">
-                                        <option value="${prod.id}" data-preco="${prod.preco}" selected>${prod.nome}</option>
+                                        <option value="${prod.id}" data-preco="${prod.preco}" selected>
+                                            ${prod.nome}
+                                        </option>
                                     </select>
-                                    <input type="number" class="prod_qtd_edicao w-20 bg-[#020617] border border-gray-800 rounded-lg py-2 px-3 text-sm text-white" min="1" value="${prod.quantidade}">
-                                    <button type="button" class="remover_prod_edicao bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white px-3 rounded-lg font-bold">X</button>
-                                </div>`).join("")}
+
+                                    <input type="number"
+                                           class="prod_qtd_edicao w-20 bg-[#020617] border border-gray-800 rounded-lg py-2 px-3 text-sm text-white"
+                                           min="1"
+                                           value="${prod.quantidade}">
+
+                                    <button type="button"
+                                            class="remover_prod_edicao bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white px-3 rounded-lg font-bold">
+                                        X
+                                    </button>
+                                </div>
+                            `,
+                                )
+                                .join("")}
                         </div>
-                        <button type="button" id="add_produto_edicao" class="mt-4 text-xs font-bold text-cyan-400 hover:text-cyan-300">+ Adicionar outro produto</button>
+
+                        <button type="button"
+                                id="add_produto_edicao"
+                                class="mt-4 text-xs font-bold text-cyan-400 hover:text-cyan-300">
+                            + Adicionar outro produto
+                        </button>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
@@ -175,6 +242,7 @@ function abrirModalEdicao(id) {
                                 <option value="cancelado" ${p.status == "cancelado" ? "selected" : ""}>Cancelado</option>
                             </select>
                         </div>
+
                         <div>
                             <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Pagamento</label>
                             <select id="edit_metodo" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white">
@@ -187,19 +255,27 @@ function abrirModalEdicao(id) {
 
                     <div>
                         <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Observações</label>
-                        <textarea id="edit_obs" rows="2" class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white">${p.observacoes || ""}</textarea>
+                        <textarea id="edit_obs" rows="2"
+                            class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-white">${p.observacoes || ""}</textarea>
                     </div>
 
                     <div class="bg-cyan-500/5 p-4 rounded-xl border border-cyan-500/20 flex justify-between items-center">
                         <span class="text-cyan-400 text-sm font-bold uppercase">Total do Pedido</span>
-                        <span id="total_edicao" class="text-white text-xl font-black font-mono">R$ ${parseFloat(p.total).toFixed(2)}</span>
+                        <span id="total_edicao" class="text-white text-xl font-black font-mono">
+                            R$ ${parseFloat(p.total || 0).toFixed(2)}
+                        </span>
                     </div>
-                </div>`;
+
+                </div>
+            `;
 
             $body.html(html);
-            popular_select_clientes("edit_cliente_id");
-            $(".prod_id_edicao").each(function() { popularSelectProduto($(this)); });
-        }
+
+            // produtos
+            $(".prod_id_edicao").each(function () {
+                popularSelectProduto($(this));
+            });
+        },
     });
 }
 
@@ -228,7 +304,10 @@ function calcularTotal() {
     const inputQtd = isEdicao ? ".prod_qtd_edicao" : ".quantidade";
 
     $(container).each(function () {
-        const preco = parseFloat($(this).find(`${select} option:selected`).data("preco")) || 0;
+        const preco =
+            parseFloat(
+                $(this).find(`${select} option:selected`).data("preco"),
+            ) || 0;
         const qtd = parseInt($(this).find(inputQtd).val()) || 0;
         total += preco * qtd;
     });
@@ -252,7 +331,9 @@ function salvarPedido() {
     });
 
     if (!id_cliente || produtos.length === 0) {
-        $("#erro_novo_pedido").text("Selecione um cliente e ao menos um produto.");
+        $("#erro_novo_pedido").text(
+            "Selecione um cliente e ao menos um produto.",
+        );
         return;
     }
 
@@ -301,7 +382,9 @@ function atualizarPedido() {
             valor_total: $("#total_edicao").text().replace("R$ ", ""),
         },
         success: function () {
-            $("#modal_detalhes_pedido").addClass("hidden").css("display", "none");
+            $("#modal_detalhes_pedido")
+                .addClass("hidden")
+                .css("display", "none");
             carregarPedidos();
         },
         complete: () => btn.prop("disabled", false).text("Salvar Alterações"),
@@ -317,7 +400,9 @@ function excluirPedido(id) {
             id_usuario: $("#id_usuario_menu").val(),
         },
         success: function () {
-            $("#modal_detalhes_pedido").addClass("hidden").css("display", "none");
+            $("#modal_detalhes_pedido")
+                .addClass("hidden")
+                .css("display", "none");
             carregarPedidos();
         },
     });
@@ -345,7 +430,10 @@ function popular_select_clientes(elementId) {
         data: { id_usuario: $("#id_usuario_menu").val() },
         success: function (res) {
             let options = '<option value="">Selecione um cliente</option>';
-            (res.clientes || []).forEach(c => options += `<option value="${c.id}">${c.nome}</option>`);
+            (res.clientes || []).forEach(
+                (c) =>
+                    (options += `<option value="${c.id}">${c.nome}</option>`),
+            );
             $("#" + elementId).html(options);
         },
     });
