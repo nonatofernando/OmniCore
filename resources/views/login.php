@@ -9,7 +9,7 @@ $erro = $_GET['erro'] ?? '';
 
 <head>
     <meta charset="UTF-8">
-    <title>Login | CoreOmni</title>
+    <title>Login | OmniCore</title>
     <link rel="stylesheet" href="/css/login.css">
     <link rel="shortcut icon" href="/imgs/logo.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -20,7 +20,7 @@ $erro = $_GET['erro'] ?? '';
         <div class="login-card bg-card text-center">
 
             <div class="logo">
-                <img src="/imgs/logo.png" alt="CoreOmni" style="width: 100px; margin-bottom: 15px;">
+                <img src="/imgs/logo.png" alt="OmniCore" style="width: 100px; margin-bottom: 15px;">
             </div>
 
             <h1 class="fw-bold font-bold text-white">Bem-vindo!</h1>
