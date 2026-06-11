@@ -1,3 +1,6 @@
+// Variável global para armazenar o ID do cliente do pedido em edição
+let clienteIdEdicaoAtivo = null;
+
 $(document).ready(function () {
     popular_select_clientes("id_novo_produto_cliente_select");
     $("#filtro_status").val("");
@@ -21,6 +24,7 @@ $(document).ready(function () {
             .addClass("hidden")
             .css("display", "none");
         $("body").removeClass("overflow-hidden");
+        clienteIdEdicaoAtivo = null; // Limpa ao fechar
     });
 
     $("#filtro_status").change(function () {
@@ -137,12 +141,15 @@ function carregarPedidos(filtro = "", busca = "") {
             };
 
             pedidos.forEach((p) => {
-                const cor =
-                    status_classes[p.status] || "bg-gray-500/20 text-gray-400";
+                const cor = status_classes[p.status] || "bg-gray-500/20 text-gray-400";
+
+                // CORREÇÃO AQUI: Verifica se o objeto cliente existe e pega o nome, caso contrário, usa o ID como fallback
+                const nomeCliente = p.cliente && p.cliente.nome ? p.cliente.nome : `Cliente #${p.cliente_id}`;
+
                 tbody.append(`
                     <tr class="text-gray-300 text-sm border-b border-gray-800 hover:bg-[#0f172a]/50">
                         <td class="px-6 py-4 font-semibold">${p.numero_pedido}</td>
-                        <td class="px-6 py-4">Cliente #${p.cliente_id}</td>
+                        <td class="px-6 py-4">${nomeCliente}</td>
                         <td class="px-6 py-4"><span class="px-3 py-1 rounded-full text-xs font-bold ${cor}">${p.status}</span></td>
                         <td class="px-6 py-4 font-semibold">R$ ${parseFloat(p.total).toFixed(2)}</td>
                         <td class="px-6 py-4 text-right">
@@ -160,10 +167,7 @@ function abrirModalEdicao(id) {
     const $body = $modal.find(".modal-body");
 
     $modal.removeClass("hidden").css("display", "flex");
-
-    $body.html(
-        '<div class="text-center py-10 text-cyan-500 animate-pulse font-bold">Carregando...</div>',
-    );
+    $body.html('<div class="text-center py-10 text-cyan-500 animate-pulse font-bold">Carregando...</div>');
 
     $.ajax({
         type: "GET",
@@ -171,27 +175,24 @@ function abrirModalEdicao(id) {
         data: { id_usuario: $("#id_usuario_menu").val() },
         success: function (res) {
             const p = res.pedido;
+
+            // CORREÇÃO AQUI: Mapeia o ID do cliente navegando corretamente pelo objeto retornado pelo seu PHP Controller
+            clienteIdEdicaoAtivo = p.cliente ? p.cliente.id : null;
+
             const cliente = p.cliente || null;
-
-            let clienteTexto = "";
-
-            if (cliente && typeof cliente === "object") {
-                clienteTexto = `${cliente.nome}`;
-            } else if (p.cliente_id) {
-                clienteTexto = `${p.cliente_id}`;
-            }
+            let clienteTexto = cliente && typeof cliente === "object" ? cliente.nome : "";
 
             let html = `
                 <input type="hidden" id="edit_pedido_id" value="${p.id}">
 
                 <div class="grid grid-cols-1 gap-5">
-
                     <div>
                         <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Cliente</label>
                         <input type="text"
                                id="edit_cliente_id"
+                               data-id-seguro="${clienteIdEdicaoAtivo}"
                                disabled
-                               class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-gray-300"
+                               class="w-full bg-[#020617] border border-gray-800 rounded-xl py-3 px-4 text-gray-400"
                                value="${clienteTexto}">
                     </div>
 
@@ -199,15 +200,10 @@ function abrirModalEdicao(id) {
                         <label class="block text-xs font-bold uppercase text-gray-500 mb-3">Produtos</label>
 
                         <div id="produtos_edicao_container" class="space-y-3">
-                            ${p.produtos
-                                .map(
-                                    (prod) => `
+                            ${p.produtos.map(prod => `
                                 <div class="produto_item_edicao flex gap-2">
-                                    <select class="prod_id_edicao flex-1 bg-[#020617] border border-gray-800 rounded-lg py-2 px-3 text-sm text-white">
-                                        <option value="${prod.id}" data-preco="${prod.preco}" selected>
-                                            ${prod.nome}
-                                        </option>
-                                    </select>
+                                    <select class="prod_id_edicao flex-1 bg-[#020617] border border-gray-800 rounded-lg py-2 px-3 text-sm text-white" 
+                                            data-id-atual="${prod.id_produto || prod.id}"></select>
 
                                     <input type="number"
                                            class="prod_qtd_edicao w-20 bg-[#020617] border border-gray-800 rounded-lg py-2 px-3 text-sm text-white"
@@ -219,9 +215,7 @@ function abrirModalEdicao(id) {
                                         X
                                     </button>
                                 </div>
-                            `,
-                                )
-                                .join("")}
+                            `).join("")}
                         </div>
 
                         <button type="button"
@@ -265,13 +259,11 @@ function abrirModalEdicao(id) {
                             R$ ${parseFloat(p.total || 0).toFixed(2)}
                         </span>
                     </div>
-
                 </div>
             `;
 
             $body.html(html);
 
-            // produtos
             $(".prod_id_edicao").each(function () {
                 popularSelectProduto($(this));
             });
@@ -280,7 +272,8 @@ function abrirModalEdicao(id) {
 }
 
 function popularSelectProduto(select) {
-    const originalValue = select.val();
+    const originalValue = select.attr("data-id-atual") || select.val();
+
     $.ajax({
         type: "GET",
         url: "/produtos/get-produtos",
@@ -292,6 +285,7 @@ function popularSelectProduto(select) {
                 options += `<option value="${p.id}" data-preco="${p.preco}" ${selected}>${p.nome} - R$ ${parseFloat(p.preco).toFixed(2)}</option>`;
             });
             select.html(options);
+            calcularTotal();
         },
     });
 }
@@ -368,26 +362,54 @@ function atualizarPedido() {
         if (pId) produtos.push({ id_produto: pId, qtd_produto: pQtd });
     });
 
+    if (produtos.length === 0) {
+        alert("O pedido precisa ter pelo menos um produto selecionado.");
+        return;
+    }
+
+    // Pega o ID de forma limpa e segura
+    let idClienteFinal = clienteIdEdicaoAtivo || $("#edit_cliente_id").attr("data-id-seguro");
+
+    if (!idClienteFinal || idClienteFinal === "undefined" || idClienteFinal === "null") {
+        alert("Erro crítico: O ID do cliente não pôde ser recuperado do banco de dados.");
+        return;
+    }
+
+    let valorTotalLimpo = $("#total_edicao").text().replace("R$ ", "").replace(",", ".").trim();
+
     btn.prop("disabled", true).text("Salvando...");
     $.ajax({
         type: "POST",
         url: `/pedidos/atualizar/${id}`,
         data: {
+            _token: $("meta[name='csrf-token']").attr("content"),
             id_usuario: $("#id_usuario_menu").val(),
-            id_cliente: $("#edit_cliente_id").val(),
+            id_cliente: parseInt(idClienteFinal),
             status: $("#edit_status").val(),
             metodo_pagamento: $("#edit_metodo").val(),
             observacoes: $("#edit_obs").val(),
             lista_produtos: produtos,
-            valor_total: $("#total_edicao").text().replace("R$ ", ""),
+            valor_total: parseFloat(valorTotalLimpo)
         },
-        success: function () {
-            $("#modal_detalhes_pedido")
-                .addClass("hidden")
-                .css("display", "none");
-            carregarPedidos();
+        success: function (res) {
+            $("#modal_detalhes_pedido").addClass("hidden").css("display", "none");
+            $("body").removeClass("overflow-hidden");
+            clienteIdEdicaoAtivo = null;
+            carregarPedidos($("#filtro_status").val(), $("#buscar_pedidos").val());
         },
-        complete: () => btn.prop("disabled", false).text("Salvar Alterações"),
+        error: function (err) {
+            console.error("Erro completo do servidor:", err);
+
+            let mensagemErro = "Erro desconhecido";
+            if (err.responseJSON && err.responseJSON.message) {
+                mensagemErro = err.responseJSON.message;
+            } else if (err.responseText) {
+                mensagemErro = err.responseText;
+            }
+
+            alert("Erro ao salvar: " + mensagemErro);
+        },
+        complete: () => btn.prop("disabled", false).text("Salvar")
     });
 }
 
